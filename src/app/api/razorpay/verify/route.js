@@ -31,14 +31,21 @@ export async function POST(req) {
       .insert([orderPayload])
       .select()
       .single();
-
+ 
     if (error) {
       console.error("Supabase error after payment verification:", error);
-      // Fallback: Notify frontend that DB failed but payment succeeded so it can store locally
+      // Fallback: Generate a pseudo-order state if DB fails so user still gets a TOG number
+      const fallbackData = {
+        ...orderPayload,
+        id: razorpay_order_id, // Use Razorpay ID as backup
+        order_number: "OFFLINE-" + Math.floor(1000 + Math.random() * 9000), // Random backup number
+        is_offline_stored: true
+      };
+
       return NextResponse.json({ 
         success: true, 
         message: "Payment verified but database write failed", 
-        orderData: orderPayload 
+        orderData: fallbackData 
       });
     }
 

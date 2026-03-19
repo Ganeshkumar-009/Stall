@@ -66,6 +66,7 @@ export default function CheckoutCart() {
         description: "Food Stall Order",
         order_id: orderData.order.id,
         handler: async function (response) {
+          setIsProcessing(true); // Keep processing state active during verification
           try {
             const verifyRes = await fetch("/api/razorpay/verify", {
               method: "POST",
@@ -81,16 +82,18 @@ export default function CheckoutCart() {
             
             if (verifyData.success) {
               clearCart();
+              // Prioritize the returned ID, then fallback to Razorpay ID
               const finalOrderId = verifyData.orderData?.id || response.razorpay_order_id;
               
               if (verifyData.message.includes("database write failed")) {
                 const localOrders = JSON.parse(localStorage.getItem("stall_orders") || "[]");
                 localStorage.setItem(
                   "stall_orders",
-                  JSON.stringify([{ id: finalOrderId, ...verifyData.orderData }, ...localOrders])
+                  JSON.stringify([{ ...verifyData.orderData, id: finalOrderId }, ...localOrders])
                 );
               }
 
+              // Instant notification to user so they don't think it's stuck
               router.push(`/receipt/${finalOrderId}`);
             } else {
               alert("Payment verification failed: " + verifyData.message);
@@ -98,7 +101,7 @@ export default function CheckoutCart() {
             }
           } catch (err) {
             console.error(err);
-            alert("Error verifying payment.");
+            alert("Error verifying payment. Please contact the counter with your Payment ID: " + response.razorpay_payment_id);
             setIsProcessing(false);
           }
         },
