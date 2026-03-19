@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("new"); // "new", "completed", "menu"
+  const [activeTab, setActiveTab] = useState("new"); // "new", "completed", "menu", "analytics"
   const [orders, setOrders] = useState([]);
   const [menu, setMenu] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Form states for adding items
   const [newItemName, setNewItemName] = useState("");
@@ -20,7 +21,7 @@ export default function AdminDashboard() {
     } else {
       const localOrders = localStorage.getItem('stall_orders');
       if (localOrders) setOrders(JSON.parse(localOrders));
-      else setOrders([]); // No hardcoded mocks!
+      else setOrders([]);
     }
   };
 
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
     } else {
       const localMenu = localStorage.getItem('stall_menu');
       if (localMenu) setMenu(JSON.parse(localMenu));
-      else setMenu([]); // No hardcoded mocks!
+      else setMenu([]);
     }
   };
 
@@ -39,14 +40,12 @@ export default function AdminDashboard() {
     fetchOrders();
     fetchMenu();
 
-    // Listen for events sent by the Customer Cart window (across tabs)
     const syncAcrossTabs = (e) => {
       if (e.key === 'stall_orders') fetchOrders();
       if (e.key === 'stall_menu') fetchMenu();
     };
     window.addEventListener('storage', syncAcrossTabs);
 
-    // Supabase Real-time connection
     const orderChannel = supabase.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, fetchOrders).subscribe();
 
     return () => {
@@ -59,10 +58,19 @@ export default function AdminDashboard() {
     const finalPaymentStatus = paymentStatus === "pending" ? "paid" : paymentStatus;
     const { error } = await supabase.from('orders').update({ order_status: "delivered", payment_status: finalPaymentStatus }).eq('id', orderId);
     
-    // Optimistic UI Update
     const updated = orders.map(o => o.id === orderId ? { ...o, order_status: "delivered", payment_status: finalPaymentStatus } : o);
     setOrders(updated);
     if (error) localStorage.setItem('stall_orders', JSON.stringify(updated));
+  };
+
+  const deleteOrder = async (orderId) => {
+    if (!confirm("Are you sure you want to delete this order?")) return;
+    const { error } = await supabase.from('orders').delete().eq('id', orderId);
+    
+    const updated = orders.filter(o => o.id !== orderId);
+    setOrders(updated);
+    localStorage.setItem('stall_orders', JSON.stringify(updated));
+    if (error) console.error("Error deleting order from Supabase:", error.message);
   };
   
   const handleAddItem = async (e) => {
@@ -80,7 +88,6 @@ export default function AdminDashboard() {
     const { data, error } = await supabase.from('menu_items').insert([payload]).select();
     
     if (error) {
-      console.warn("Saving new item to memory since DB table menu_items might be missing:", error.message);
       const newMenu = [{ id: `ITEM-${Date.now()}`, ...payload }, ...menu];
       setMenu(newMenu);
       localStorage.setItem('stall_menu', JSON.stringify(newMenu));
@@ -109,8 +116,32 @@ export default function AdminDashboard() {
     if (error) localStorage.setItem('stall_menu', JSON.stringify(newMenu));
   };
 
-  const newOrders = orders.filter(o => o.order_status === "new");
-  const completedOrders = orders.filter(o => o.order_status === "delivered");
+  const filterOrders = (orderList) => {
+    if (!searchTerm) return orderList;
+    const term = searchTerm.toLowerCase();
+    return orderList.filter(o => 
+      o.customer_phone?.toLowerCase().includes(term) || 
+      o.id.toLowerCase().includes(term) ||
+      (o.order_number && `tog-${o.order_number}`.includes(term))
+    );
+  };
+
+  const newOrders = filterOrders(orders.filter(o => o.order_status === "new"));
+  const completedOrders = filterOrders(orders.filter(o => o.order_status === "delivered"));
+
+  // Calculate analytics
+  const salesSummary = orders
+    .filter(o => o.order_status === "delivered")
+    .reduce((acc, order) => {
+      order.items.forEach(item => {
+        if (!acc[item.name]) acc[item.name] = { name: item.name, quantity: 0, revenue: 0 };
+        acc[item.name].quantity += item.quantity;
+        acc[item.name].revenue += (item.price * item.quantity);
+      });
+      return acc;
+    }, {});
+
+  const analyticsList = Object.values(salesSummary).sort((a, b) => b.quantity - a.quantity);
 
   return (
     <div className="app-container" style={{ maxWidth: "800px", padding: '20px' }}>
@@ -122,23 +153,36 @@ export default function AdminDashboard() {
       </header>
 
       {/* ADMIN SECURE TABS */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '4px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
         <button onClick={() => setActiveTab('new')} className={activeTab === 'new' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap' }}>Orders ({newOrders.length})</button>
         <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'completed' ? '' : 'var(--text-muted)' }}>Delivered ({completedOrders.length})</button>
-        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : 'var(--text-muted)' }}>Manage Menu</button>
+        <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'analytics' ? '' : 'var(--text-muted)' }}>Analytics</button>
+        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : 'var(--text-muted)' }}>Menu</button>
       </div>
+
+      {/* SEARCH BAR */}
+      {(activeTab === 'new' || activeTab === 'completed') && (
+        <div style={{ marginBottom: '20px' }}>
+          <input 
+            type="text" 
+            placeholder="Search by phone or order ID..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+            className="input-field" 
+            style={{ marginBottom: 0 }}
+          />
+        </div>
+      )}
 
       {/* NEW ORDERS TAB */}
       {activeTab === 'new' && (
         <div className="admin-grid" style={{ display: 'grid', gap: '16px' }}>
-          {newOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No new orders right now. Ready for rush!</p> : 
+          {newOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No matching orders found.</p> : 
             newOrders.map((order) => (
               <div className="admin-card" key={order.id}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
                   <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
-                  <span className="badge-status" style={{ background: order.payment_method === "upi" ? "rgba(42, 157, 143, 0.1)" : "rgba(244, 162, 97, 0.1)", color: order.payment_method === "upi" ? "var(--success)" : "var(--secondary)" }}>
-                    {order.payment_method.toUpperCase()} ({order.payment_status})
-                  </span>
+                  <button onClick={() => deleteOrder(order.id)} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold' }}>Delete</button>
                 </div>
                 <p style={{ marginBottom: "12px", fontWeight: "600", color: "var(--text-main)" }}>📞 {order.customer_phone}</p>
                 <div style={{ marginBottom: "16px", color: "var(--text-muted)" }}>
@@ -146,9 +190,14 @@ export default function AdminDashboard() {
                     <div key={i}>{item.quantity}x {item.name}</div>
                   ))}
                 </div>
-                <button className="btn-success" onClick={() => markAsDelivered(order.id, order.payment_status)} style={{ width: '100%', padding: '12px', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}>
-                  Mark Delivered ✅
-                </button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <span className="badge-status" style={{ flex: 1, textAlign: 'center', background: order.payment_method === "upi" ? "rgba(42, 157, 143, 0.1)" : "rgba(244, 162, 97, 0.1)", color: order.payment_method === "upi" ? "var(--success)" : "var(--secondary)" }}>
+                    {order.payment_method.toUpperCase()} ({order.payment_status})
+                  </span>
+                  <button className="btn-success" onClick={() => markAsDelivered(order.id, order.payment_status)} style={{ flex: 2, padding: '10px', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    Mark Delivered ✅
+                  </button>
+                </div>
               </div>
             ))
           }
@@ -158,29 +207,52 @@ export default function AdminDashboard() {
       {/* COMPLETED ORDERS TAB */}
       {activeTab === 'completed' && (
         <div className="admin-grid" style={{ display: 'grid', gap: '16px' }}>
-          {completedOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No completed orders yet.</p> : 
+          {completedOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No matching completed orders found.</p> : 
             completedOrders.map((order) => (
               <div className="admin-card" key={order.id} style={{ borderColor: "var(--success)", opacity: 0.8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
                   <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
-                  <span className="badge-status" style={{ background: "rgba(42, 157, 143, 0.1)", color: "var(--success)" }}>DELIVERED</span>
+                  <button onClick={() => deleteOrder(order.id)} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold' }}>Delete</button>
                 </div>
                 <div style={{ marginBottom: "8px", color: "var(--text-muted)" }}>
                   {order.items.map((item, i) => (
                     <div key={i}>{order.items && order.items.length > 0 ? (item.quantity + "x " + item.name) : ""}</div>
                   ))}
                 </div>
-                {order.total_amount && <p style={{ fontWeight: "700", color: "var(--text-main)" }}>Total: ₹{order.total_amount}</p>}
+                {order.total_amount && <p style={{ fontWeight: "700", color: "var(--text-main)" }}>Total: ₹{order.total_amount} | {order.customer_phone}</p>}
               </div>
             ))
           }
         </div>
       )}
 
+      {/* ANALYTICS TAB */}
+      {activeTab === 'analytics' && (
+        <div style={{ background: "var(--surface)", padding: "24px", borderRadius: "16px", boxShadow: "var(--shadow-sm)" }}>
+          <h2 style={{ marginBottom: "20px", color: "var(--text-main)" }}>Sales Summary 📈</h2>
+          {analyticsList.length === 0 ? <p style={{ color: "var(--text-muted)" }}>No sales data available yet.</p> : (
+            <div style={{ display: 'grid', gap: '16px' }}>
+              {analyticsList.map((item, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: '1px solid #eee' }}>
+                  <div style={{ fontWeight: '600' }}>{item.name}</div>
+                  <div style={{ display: 'flex', gap: '20px' }}>
+                    <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>{item.quantity} sold</span>
+                    <span style={{ color: 'var(--text-muted)', minWidth: '80px', textAlign: 'right' }}>₹{item.revenue}</span>
+                  </div>
+                </div>
+              ))}
+              <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '2px solid var(--primary)', display: 'flex', justifyContent: 'space-between', fontWeight: '800', fontSize: '1.2rem' }}>
+                <span>Total Revenue</span>
+                <span>₹{analyticsList.reduce((sum, item) => sum + item.revenue, 0)}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* MENU MANAGEMENT TAB */}
       {activeTab === 'menu' && (
         <div>
-          {/* Add Item Form  */}
           <div style={{ background: "var(--surface)", padding: "20px", borderRadius: "16px", boxShadow: "var(--shadow-sm)", marginBottom: "24px" }}>
             <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem" }}>Add New Item</h2>
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -220,3 +292,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
