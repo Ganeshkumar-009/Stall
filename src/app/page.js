@@ -35,11 +35,8 @@ export default function Home() {
     <div className="app-container">
       <header className="header">
         <div>
-          <h1>Godavari Ruchulu 🍔</h1>
+          <h1>Tastes of Godavari</h1>
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Order right to your table.</p>
-        </div>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span className="badge">Table 12</span>
         </div>
       </header>
 

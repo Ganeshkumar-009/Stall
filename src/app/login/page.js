@@ -37,8 +37,8 @@ export default function LoginPage() {
     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
       <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
         
-        <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👔" : "🍔"}</div>
-        <h1 style={{ color: "var(--primary)", fontWeight: "800", marginBottom: "8px" }}>Godavari Ruchulu</h1>
+        <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👔" : "✨"}</div>
+        <h1 style={{ color: "var(--primary)", fontWeight: "800", marginBottom: "8px" }}>Tastes of Godavari</h1>
         <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "0.95rem" }}>
           {step === "select-role" ? "Welcome back! Who is logging in today?" : "Enter Admin Credentials"}
         </p>

@@ -62,7 +62,7 @@ export default function CheckoutCart() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderData.order.amount,
         currency: orderData.order.currency,
-        name: "Godavari Ruchulu",
+        name: "Tastes of Godavari",
         description: "Food Stall Order",
         order_id: orderData.order.id,
         handler: async function (response) {

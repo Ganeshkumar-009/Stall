@@ -2,7 +2,7 @@ import { CartProvider } from "@/context/CartContext";
 import "./globals.css";
 
 export const metadata = {
-  title: "Godavari Ruchulu - QR Food Stall",
+  title: "Tastes of Godavari - QR Food Stall",
   description: "Order fresh food directly to your table seamlessly.",
 };
 
