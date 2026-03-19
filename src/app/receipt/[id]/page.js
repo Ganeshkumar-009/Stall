@@ -25,6 +25,15 @@ export default function ReceiptPage() {
     if (id) fetchOrderData();
   }, [id]);
 
+  useEffect(() => {
+    // Automatically trigger Print/Save as PDF when the receipt completely mounts.
+    if (order) {
+      setTimeout(() => {
+        window.print();
+      }, 750);
+    }
+  }, [order]);
+
   if (loading) return <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Receipt...</div>;
   if (!order) return <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><h3>Order not found</h3><Link href="/">Return to Menu</Link></div>;
 

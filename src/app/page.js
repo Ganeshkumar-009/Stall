@@ -40,7 +40,6 @@ export default function Home() {
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <span className="badge">Table 12</span>
-          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '4px 8px', fontSize: '0.8rem', borderRadius: '8px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
         </div>
       </header>
 
