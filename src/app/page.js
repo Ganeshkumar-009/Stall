@@ -33,11 +33,12 @@ export default function Home() {
 
   return (
     <div className="app-container">
-      <header className="header">
+      <header className="header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <h1>Tastes of Godavari</h1>
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Order right to your table.</p>
         </div>
+        <Link href="/login" style={{ fontSize: "0.8rem", color: "var(--text-muted)", textDecoration: "none", border: "1px solid #eee", padding: "4px 8px", borderRadius: "6px" }}>Admin</Link>
       </header>
 
       <h2 className="section-title">Live Menu</h2>
