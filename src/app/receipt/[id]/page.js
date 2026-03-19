@@ -41,7 +41,7 @@ export default function ReceiptPage() {
     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
       <div style={{ background: "white", width: "100%", maxWidth: "400px", padding: "32px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
         <h1 style={{ color: "var(--success)", textAlign: "center", marginBottom: "8px" }}>Order Confirmed!</h1>
-        <div style={{ textAlign: "center", color: "var(--text-muted)", marginBottom: "24px" }}>Receipt #{order.id}</div>
+        <div style={{ textAlign: "center", color: "var(--text-muted)", marginBottom: "24px" }}>Receipt {order.order_number ? `#TOG-${order.order_number}` : `#${order.id.split('-')[0].toUpperCase()}`}</div>
         
         <div style={{ marginBottom: "24px" }}>
           <h3 style={{ borderBottom: "1px solid #eee", paddingBottom: "8px", marginBottom: "12px", color: "var(--text-main)" }}>Items</h3>

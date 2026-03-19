@@ -135,7 +135,7 @@ export default function AdminDashboard() {
             newOrders.map((order) => (
               <div className="admin-card" key={order.id}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                  <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>#{order.id.slice(0, 8).toUpperCase()}</span>
+                  <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
                   <span className="badge-status" style={{ background: order.payment_method === "upi" ? "rgba(42, 157, 143, 0.1)" : "rgba(244, 162, 97, 0.1)", color: order.payment_method === "upi" ? "var(--success)" : "var(--secondary)" }}>
                     {order.payment_method.toUpperCase()} ({order.payment_status})
                   </span>
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
             completedOrders.map((order) => (
               <div className="admin-card" key={order.id} style={{ borderColor: "var(--success)", opacity: 0.8 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                  <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>#{order.id.slice(0, 8).toUpperCase()}</span>
+                  <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
                   <span className="badge-status" style={{ background: "rgba(42, 157, 143, 0.1)", color: "var(--success)" }}>DELIVERED</span>
                 </div>
                 <div style={{ marginBottom: "8px", color: "var(--text-muted)" }}>

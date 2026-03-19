@@ -147,7 +147,7 @@ export default function CheckoutCart() {
 
     if (error) {
       console.warn("Database disconnected, writing to stall_orders cache...");
-      const realOrderId = "ORD-" + Math.floor(100000 + Math.random() * 900000); 
+      const realOrderId = "TOG-OFFLINE-" + Math.floor(100000 + Math.random() * 900000); 
       
       const localOrders = JSON.parse(localStorage.getItem("stall_orders") || "[]");
       localStorage.setItem("stall_orders", JSON.stringify([{ id: realOrderId, ...payload }, ...localOrders]));
