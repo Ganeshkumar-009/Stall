@@ -3,8 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import Script from "next/script";
 
 export default function ReceiptPage() {
   const { id } = useParams();
@@ -29,7 +28,14 @@ export default function ReceiptPage() {
   }, [id]);
 
   const downloadPDF = async () => {
-    if (!receiptRef.current) return;
+    if (!receiptRef.current || !window.jspdf || !window.html2canvas) {
+      console.warn("PDF libraries not loaded yet");
+      return;
+    }
+    
+    const { jsPDF } = window.jspdf;
+    const html2canvas = window.html2canvas;
+
     const canvas = await html2canvas(receiptRef.current, {
       scale: 2,
       useCORS: true,
@@ -49,7 +55,7 @@ export default function ReceiptPage() {
     if (order) {
       setTimeout(() => {
         downloadPDF();
-      }, 1500); // Wait for images/styles to settles
+      }, 2000); // Give CDN scripts more time to load and stabilize
     }
   }, [order]);
 
@@ -58,6 +64,15 @@ export default function ReceiptPage() {
 
   return (
     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+      <Script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" 
+        strategy="afterInteractive" 
+      />
+      <Script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" 
+        strategy="afterInteractive" 
+      />
+      
       <div ref={receiptRef} style={{ background: "white", width: "100%", maxWidth: "400px", padding: "32px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
         <h1 style={{ color: "var(--success)", textAlign: "center", marginBottom: "8px" }}>Order Confirmed!</h1>
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
@@ -92,4 +107,5 @@ export default function ReceiptPage() {
     </div>
   );
 }
+
 
