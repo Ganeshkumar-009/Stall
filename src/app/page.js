@@ -47,13 +47,24 @@ export default function Home() {
           menu.map((item) => (
             <div key={item.id} className="menu-card">
               <img src={item.image_url} alt={item.name} className="menu-image" />
-              <div className="menu-details">
-                <h3 className="menu-title">{item.name}</h3>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span className="menu-price">₹{item.price}</span>
-                  <button className="btn-primary" onClick={() => addToCart(item)} style={{ padding: "8px 16px", margin: 0 }}>Add</button>
-                </div>
+              <div className="menu-details" style={{ flex: 1 }}>
+                <h3 className="menu-title" style={{ margin: 0 }}>{item.name}</h3>
+                <span className="menu-price" style={{ fontWeight: 800, color: "var(--primary)", fontSize: "1.1rem" }}>₹{item.price}</span>
               </div>
+              <button 
+                className="btn-primary" 
+                onClick={() => addToCart(item)} 
+                style={{ 
+                  width: "auto", 
+                  padding: "10px 24px", 
+                  margin: 0, 
+                  borderRadius: "100px", 
+                  fontSize: "1rem",
+                  boxShadow: "none"
+                }}
+              >
+                Add
+              </button>
             </div>
           ))
         }
