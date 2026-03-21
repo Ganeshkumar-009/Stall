@@ -50,7 +50,7 @@ export default function LoginPage() {
         {step === "select-role" && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <button onClick={() => router.push("/")} className="btn-primary" style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem" }}>
-              Continue as Guest ➔
+              Continue as Customer ➔
             </button>
             <button onClick={() => setStep("admin-login")} style={{ background: "white", border: "1px solid #ddd", color: "#333", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
               Login as Admin
