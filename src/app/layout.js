@@ -1,4 +1,5 @@
 import { CartProvider } from "@/context/CartContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata = {
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <CartProvider>{children}</CartProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
