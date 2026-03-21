@@ -21,8 +21,10 @@
 
 body { 
   background-color: var(--bg-color); 
-  background-image: radial-gradient(var(--surface) 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
+  background-image: url('/ratatouille_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--text-main); 
   -webkit-font-smoothing: antialiased; 
 }
@@ -31,10 +33,14 @@ body {
   max-width: 480px; 
   margin: 0 auto; 
   min-height: 100vh; 
-  background: var(--bg-color); 
+  background: rgba(254, 250, 224, 0.9); /* var(--bg-color) with opacity */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: relative; 
   padding-bottom: 90px;
-  box-shadow: 0 0 50px rgba(40, 54, 24, 0.05);
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(212, 163, 115, 0.3);
+  border-right: 1px solid rgba(212, 163, 115, 0.3);
 }
 
 /* Header Elements */
@@ -63,18 +69,62 @@ body {
 .menu-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 16px 20px; }
 
 /* Menu Card */
-.menu-card { background: var(--surface); border-radius: var(--radius-lg); padding: 16px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(0,0,0,0.02); }
+.menu-card { 
+  background: rgba(241, 227, 211, 0.8);
+  border-radius: var(--radius-lg); 
+  padding: 16px; 
+  display: flex; 
+  align-items: center; 
+  gap: 16px; 
+  box-shadow: var(--shadow-sm); 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  border: 2px solid transparent;
+}
+.menu-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-gold);
+  background: rgba(241, 227, 211, 0.95);
+}
 .menu-card:active { transform: scale(0.97); }
-.menu-card img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.menu-card img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid var(--accent-gold); }
 .menu-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.menu-info h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); line-height: 1.2; }
+.menu-info h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); line-height: 1.2; }
 .menu-info p { color: var(--primary); font-weight: 800; font-size: 1.1rem; }
 
 /* Buttons */
-.btn-add { background: var(--bg-color); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; cursor: pointer; transition: all 0.2s; }
-.btn-add:active { background: var(--primary); color: white; }
-.btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: white; border: none; padding: 16px; width: 100%; border-radius: var(--radius-lg); font-size: 1.2rem; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: var(--shadow-md); transition: opacity 0.2s; }
+.btn-add { 
+  background: var(--accent-gold); 
+  color: white; 
+  border: none;
+  padding: 8px 16px; 
+  border-radius: var(--radius-full); 
+  font-weight: 700; 
+  cursor: pointer; 
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(212, 163, 115, 0.3);
+}
+.btn-add:hover { background: var(--primary); transform: translateY(-1px); }
+
+.btn-primary { 
+  font-family: 'Playfair Display', serif;
+  background: linear-gradient(135deg, #9D0208 0%, #D4A373 100%); 
+  color: white; 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px; 
+  width: 100%; 
+  border-radius: var(--radius-lg); 
+  font-size: 1.2rem; 
+  font-weight: 700; 
+  cursor: pointer; 
+  margin-top: 10px; 
+  box-shadow: var(--shadow-md); 
+  transition: all 0.3s; 
+}
 .btn-primary:active { opacity: 0.9; transform: translateY(1px); }
+.btn-primary:hover {
+  box-shadow: 0 8px 25px rgba(157, 2, 8, 0.25);
+  transform: translateY(-2px);
+}
 .btn-secondary { background: var(--text-main); color: white; border: none; padding: 16px; width: 100%; border-radius: var(--radius-lg); font-size: 1.2rem; font-weight: 700; cursor: pointer; margin-top: 12px; }
 
 /* Floating Cart Action */

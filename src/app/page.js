@@ -35,7 +35,8 @@ export default function Home() {
     <div className="app-container">
       <header className="header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <h1>Tastes of Godavari</h1>
+          <h1 style={{ marginBottom: "0" }}>Tastes of Godavari</h1>
+          <p style={{ fontStyle: "italic", color: "var(--accent-gold)", fontSize: "0.85rem", fontWeight: "600", letterSpacing: "0.5px" }}>"Anyone Can Cook." - Chef Gusteau</p>
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Order right to your table.</p>
         </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
