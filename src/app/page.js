@@ -36,7 +36,7 @@ export default function Home() {
       <header className="header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '150px', height: 'auto', marginBottom: '8px', borderRadius: '12px' }} />
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Order right to your table.</p>
+          <p style={{ color: "var(--primary)", fontSize: "1.2rem", fontWeight: "900", letterSpacing: "1px", textTransform: "uppercase" }}>Tastes of Godavari</p>
         </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <Link href="/history" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: "0.8rem", color: "var(--primary)", fontWeight: "700", textDecoration: "none", border: "1px solid var(--primary)", padding: "6px 14px", borderRadius: "100px", background: 'white' }}>
@@ -48,7 +48,7 @@ export default function Home() {
         </div>
       </header>
 
-      <h2 className="section-title">✨ Menu of the Evening</h2>
+      <h2 className="section-title">✨ Specials Today</h2>
       <div className="menu-sections" style={{ display: 'grid', gap: '32px' }}>
         {menu.length === 0 ? (
           <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "40px" }}>
@@ -98,12 +98,12 @@ export default function Home() {
       </div>
 
       {cart.length > 0 && (
-        <div className="cart-float" style={{ background: 'linear-gradient(135deg, #1D3557 0%, #283618 100%)', boxShadow: '0 8px 30px rgba(0,0,0,0.5)' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="cart-float" style={{ background: 'linear-gradient(135deg, #1D3557 0%, #283618 100%)', boxShadow: '0 8px 30px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', width: 'calc(100% - 40px)', maxWidth: '440px', borderRadius: '50px', zIndex: '1000' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white', fontWeight: 'bold', fontSize: '1.1rem' }}>
             🛒 {cart.reduce((sum, i) => sum + i.quantity, 0)} items | ₹{cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)}
           </span>
           <Link href="/cart">
-            <button className="btn-success" style={{ padding: "10px 20px", marginLeft: "16px", background: '#D4A373', border: 'none', borderRadius: '20px', fontWeight: 'bold' }}>To Table ➔</button>
+            <button className="btn-success" style={{ padding: "10px 24px", background: 'white', color: '#1D3557', border: 'none', borderRadius: '100px', fontWeight: '800', cursor: 'pointer', fontSize: '1rem' }}>To Cart ➔</button>
           </Link>
         </div>
       )}
