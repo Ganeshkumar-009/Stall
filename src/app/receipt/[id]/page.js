@@ -79,6 +79,12 @@ export default function ReceiptPage() {
           <div style={{ fontSize: "1.5rem", fontWeight: "900", color: "var(--primary)", background: "rgba(230, 57, 70, 0.05)", display: "inline-block", padding: "8px 16px", borderRadius: "12px" }}>
             {order.order_number ? `Order #TOG-${order.order_number}` : `Order #${order.id.slice(0, 18).toUpperCase()}`}
           </div>
+          <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "8px", fontWeight: "500" }}>
+            {new Date(order.created_at).toLocaleString('en-IN', { 
+              dateStyle: 'medium', 
+              timeStyle: 'short' 
+            })}
+          </div>
         </div>
         
         <div style={{ marginBottom: "24px" }}>
