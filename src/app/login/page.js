@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleAdminLogin = async (e) => {
@@ -66,14 +67,24 @@ export default function LoginPage() {
               className="input-field"
               required
             />
-            <input 
-              type="password" 
-              placeholder="Admin Password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-              required
-            />
+            <div style={{ position: 'relative', width: '100%' }}>
+              <input 
+                type={showPassword ? "text" : "password"} 
+                placeholder="Admin Password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-field"
+                style={{ paddingRight: '45px' }}
+                required
+              />
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ position: 'absolute', right: '15px', top: '22px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                {showPassword ? "👁️" : "🙈"}
+              </button>
+            </div>
             <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px", borderRadius: "16px", marginTop: "8px" }} disabled={loading}>
               {loading ? "Verifying..." : "Login to Dashboard"}
             </button>

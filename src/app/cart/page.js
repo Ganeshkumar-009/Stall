@@ -168,8 +168,8 @@ export default function CheckoutCart() {
   if (cart.length === 0) {
     return (
       <div className="app-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: '20px', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontStyle: 'italic', color: 'var(--primary)', marginBottom: '16px' }}>Your table is empty 🍽️</h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Chef Remy is waiting for your orders!</p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontStyle: 'italic', color: 'var(--primary)', marginBottom: '16px' }}>Your cart is empty 🛒</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Waiting for your order</p>
         <Link href="/"><button className="btn-primary" style={{ width: "auto", padding: "12px 30px" }}>Discover Flavors</button></Link>
       </div>
     );

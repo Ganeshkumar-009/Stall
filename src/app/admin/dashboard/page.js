@@ -150,7 +150,7 @@ export default function AdminDashboard() {
       <header className="header" style={{ marginBottom: "20px" }}>
         <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', borderRadius: '8px' }} />
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>🚪 Hang Apron</button>
+          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>🚪 Log out</button>
         </div>
       </header>
 
