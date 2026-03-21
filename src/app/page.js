@@ -38,7 +38,10 @@ export default function Home() {
           <h1>Tastes of Godavari</h1>
           <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Order right to your table.</p>
         </div>
-        <Link href="/login" style={{ fontSize: "0.8rem", color: "var(--text-muted)", textDecoration: "none", border: "1px solid #eee", padding: "4px 8px", borderRadius: "6px" }}>Admin</Link>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <Link href="/history" style={{ fontSize: "0.8rem", color: "var(--primary)", fontWeight: "600", textDecoration: "none", border: "1px solid var(--primary)", padding: "4px 8px", borderRadius: "6px" }}>My Orders</Link>
+          <Link href="/login" style={{ fontSize: "0.8rem", color: "var(--text-muted)", textDecoration: "none", border: "1px solid #eee", padding: "4px 8px", borderRadius: "6px" }}>Admin</Link>
+        </div>
       </header>
 
       <h2 className="section-title">Live Menu</h2>

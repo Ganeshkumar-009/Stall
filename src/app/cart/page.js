@@ -86,7 +86,7 @@ export default function CheckoutCart() {
               const finalOrderId = verifyData.orderData?.id || response.razorpay_order_id;
               
               if (verifyData.message.includes("database write failed")) {
-                const localOrders = JSON.parse(localStorage.getItem("stall_orders") || "[]");
+                localStorage.setItem("stall_customer_phone", phone);
                 localStorage.setItem(
                   "stall_orders",
                   JSON.stringify([{ ...verifyData.orderData, id: finalOrderId }, ...localOrders])
@@ -160,6 +160,7 @@ export default function CheckoutCart() {
       return;
     }
 
+    localStorage.setItem("stall_customer_phone", phone);
     clearCart();
     router.push(`/receipt/${orderData.id}`);
   };
