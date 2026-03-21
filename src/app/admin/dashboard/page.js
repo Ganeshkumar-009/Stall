@@ -148,7 +148,7 @@ export default function AdminDashboard() {
   return (
     <div className="app-container" style={{ maxWidth: "800px", padding: '20px' }}>
       <header className="header" style={{ marginBottom: "20px" }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Chef's Control Center 👨‍🍳</h1>
+        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', borderRadius: '8px' }} />
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>🚪 Hang Apron</button>
         </div>

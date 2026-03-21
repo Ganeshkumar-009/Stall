@@ -38,7 +38,7 @@ export default function LoginPage() {
       <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
         
         <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👨‍🍳" : "✨"}</div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--primary)", fontWeight: "700", fontStyle: "italic", marginBottom: "8px" }}>Tastes of Godavari</h1>
+        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '180px', height: 'auto', margin: '0 auto 16px', display: 'block', borderRadius: '16px' }} />
         <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "0.95rem" }}>
           {step === "select-role" ? "Welcome back! Who is cooking in today?" : "Enter Chef Credentials"}
         </p>

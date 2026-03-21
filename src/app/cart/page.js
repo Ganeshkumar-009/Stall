@@ -178,7 +178,7 @@ export default function CheckoutCart() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontStyle: 'italic' }}>Culinary Selection 🛒</h1>
+        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '100px', height: 'auto' }} />
         <Link href="/" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "700", border: '1px solid var(--accent-gold)', padding: '4px 12px', borderRadius: '20px' }}>Back</Link>
       </header>
 
