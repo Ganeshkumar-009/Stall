@@ -37,10 +37,10 @@ export default function LoginPage() {
     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
       <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
         
-        <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👨‍🍳" : "✨"}</div>
+        <div style={{ marginBottom: "24px" }}></div>
         <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '180px', height: 'auto', margin: '0 auto 16px', display: 'block', borderRadius: '16px' }} />
         <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "0.95rem" }}>
-          {step === "select-role" ? "Welcome back! Who is cooking in today?" : "Enter Chef Credentials"}
+          {step === "select-role" ? "Welcome back! Please select your role:" : "Enter Admin Credentials"}
         </p>
 
         {errorMsg && <p style={{ color: "var(--primary)", background: "rgba(230, 57, 70, 0.1)", padding: "10px", borderRadius: "8px", marginBottom: "16px", fontSize: "0.9rem", fontWeight: "600" }}>{errorMsg}</p>}
@@ -50,8 +50,8 @@ export default function LoginPage() {
             <button onClick={() => router.push("/")} className="btn-primary" style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem" }}>
               Continue as Guest ➔
             </button>
-            <button onClick={() => setStep("admin-login")} style={{ background: "rgba(255,255,255,0.7)", border: "2px solid #D4A373", color: "#1D3557", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
-              Login as Chef 👨‍🍳
+            <button onClick={() => setStep("admin-login")} style={{ background: "white", border: "1px solid #ddd", color: "#333", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
+              Login as Admin
             </button>
           </div>
         )}

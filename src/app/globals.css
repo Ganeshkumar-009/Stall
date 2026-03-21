@@ -5,26 +5,22 @@
   --primary-hover: #6A040F;
   --secondary: #606C38;
   --secondary-hover: #283618;
-  --bg-color: #FEFAE0;
-  --surface: #F1E3D3;
-  --text-main: #283618;
-  --text-muted: #606C38;
+  --bg-color: #F8F9FA;
+  --surface: #FFFFFF;
+  --text-main: #333333;
+  --text-muted: #666666;
   --success: #386641;
-  --shadow-sm: 0 4px 10px rgba(40, 54, 24, 0.08);
-  --shadow-md: 0 12px 30px rgba(157, 2, 8, 0.12);
-  --radius-lg: 24px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 20px rgba(157, 2, 8, 0.1);
+  --radius-lg: 16px;
   --radius-full: 9999px;
-  --accent-gold: #D4A373;
+  --accent-soft: #F1E3D3;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
 
 body { 
   background-color: var(--bg-color); 
-  background-image: url('/ratatouille_paris_bg.png');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   color: var(--text-main); 
   -webkit-font-smoothing: antialiased; 
 }
@@ -33,14 +29,12 @@ body {
   max-width: 480px; 
   margin: 0 auto; 
   min-height: 100vh; 
-  background: rgba(254, 250, 224, 0.7); /* More transparent to show Paris */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: white;
   position: relative; 
   padding-bottom: 90px;
-  box-shadow: 0 0 120px rgba(0, 0, 0, 0.4);
-  border-left: 2px solid rgba(29, 53, 87, 0.1); /* Parisian Blue hint */
-  border-right: 2px solid rgba(29, 53, 87, 0.1);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
 /* Header Elements */
@@ -61,13 +55,12 @@ body {
 }
 
 .header .badge { 
-  background: linear-gradient(135deg, var(--accent-gold) 0%, #B08968 100%); 
+  background: var(--primary); 
   color: white; 
-  padding: 6px 14px; 
+  padding: 4px 12px; 
   border-radius: var(--radius-full); 
-  font-weight: 700; 
-  font-size: 0.8rem; 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-weight: 600; 
+  font-size: 0.85rem; 
 }
 
 /* Typography */
@@ -84,60 +77,54 @@ body {
 
 /* Menu Card */
 .menu-card { 
-  background: rgba(241, 227, 211, 0.8);
+  background: var(--surface);
   border-radius: var(--radius-lg); 
   padding: 16px; 
   display: flex; 
   align-items: center; 
   gap: 16px; 
   box-shadow: var(--shadow-sm); 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-  border: 2px solid transparent;
+  transition: all 0.2s; 
+  border: 1px solid #f0f0f0;
 }
 .menu-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent-gold);
-  background: rgba(241, 227, 211, 0.95);
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  background: white;
 }
-.menu-card:active { transform: scale(0.97); }
-.menu-card img { width: 90px; height: 90px; border-radius: 14px; object-fit: cover; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid var(--accent-gold); }
+.menu-card:active { transform: scale(0.98); }
+.menu-card img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; }
 .menu-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .menu-info h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); line-height: 1.2; }
 .menu-info p { color: var(--primary); font-weight: 800; font-size: 1.1rem; }
 
 /* Buttons */
 .btn-add { 
-  background: var(--accent-gold); 
+  background: var(--primary); 
   color: white; 
   border: none;
   padding: 8px 16px; 
   border-radius: var(--radius-full); 
-  font-weight: 700; 
+  font-weight: 600; 
   cursor: pointer; 
-  transition: all 0.2s;
-  box-shadow: 0 4px 10px rgba(212, 163, 115, 0.3);
 }
-.btn-add:hover { background: var(--primary); transform: translateY(-1px); }
 
 .btn-primary { 
-  font-family: 'Playfair Display', serif;
-  background: linear-gradient(135deg, #9D0208 0%, #D4A373 100%); 
+  background: var(--primary); 
   color: white; 
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: none;
   padding: 16px; 
   width: 100%; 
   border-radius: var(--radius-lg); 
-  font-size: 1.2rem; 
+  font-size: 1.1rem; 
   font-weight: 700; 
   cursor: pointer; 
   margin-top: 10px; 
   box-shadow: var(--shadow-md); 
-  transition: all 0.3s; 
 }
 .btn-primary:active { opacity: 0.9; transform: translateY(1px); }
 .btn-primary:hover {
-  box-shadow: 0 8px 25px rgba(157, 2, 8, 0.25);
-  transform: translateY(-2px);
+  background: var(--primary-hover);
 }
 .btn-secondary { background: var(--text-main); color: white; border: none; padding: 16px; width: 100%; border-radius: var(--radius-lg); font-size: 1.2rem; font-weight: 700; cursor: pointer; margin-top: 12px; }
 
@@ -165,21 +152,14 @@ body {
 .menu-sections { margin-top: 10px; }
 .menu-category-group { margin-bottom: 8px; }
 .category-title { 
-  font-family: 'Playfair Display', serif;
-  background: rgba(29, 53, 87, 0.05); /* Soft Parisian Blue */
-  padding: 10px 24px;
-  border-radius: 12px 0 12px 0;
+  background: #f8f9fa;
+  padding: 8px 16px;
+  border-radius: 8px;
   display: inline-block;
-  font-weight: 700;
-  color: #1D3557;
-  border-bottom: 3px solid var(--accent-gold);
+  font-weight: 800;
+  color: var(--primary);
+  border-left: 4px solid var(--primary);
   text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.category-title::before {
-  content: "🍴 ";
-  font-size: 0.9rem;
-  margin-right: 8px;
+  letter-spacing: 1px;
 }
 

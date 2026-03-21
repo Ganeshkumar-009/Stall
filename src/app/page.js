@@ -36,14 +36,13 @@ export default function Home() {
       <header className="header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '150px', height: 'auto', marginBottom: '8px', borderRadius: '12px' }} />
-          <p style={{ fontStyle: "italic", color: "var(--accent-gold)", fontSize: "0.85rem", fontWeight: "600", letterSpacing: "0.5px" }}>"Anyone Can Cook." - Chef Gusteau</p>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Order right to your table.</p>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Order right to your table.</p>
         </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <Link href="/history" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: "0.8rem", color: "var(--primary)", fontWeight: "600", textDecoration: "none", border: "2px solid #D4A373", padding: "6px 12px", borderRadius: "20px", background: 'rgba(212, 163, 115, 0.1)' }}>
+          <Link href="/history" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: "0.8rem", color: "var(--primary)", fontWeight: "700", textDecoration: "none", border: "1px solid var(--primary)", padding: "6px 14px", borderRadius: "100px", background: 'white' }}>
             📜 History
           </Link>
-          <Link href="/login" style={{ fontSize: "0.8rem", color: "#1D3557", textDecoration: "none", border: "1px solid rgba(29, 53, 87, 0.2)", padding: "6px 12px", borderRadius: "20px", background: 'rgba(255, 255, 255, 0.5)' }}>
+          <Link href="/login" style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "700", textDecoration: "none", border: "1px solid #ddd", padding: "6px 14px", borderRadius: "100px", background: 'white' }}>
             🏰 Admin
           </Link>
         </div>
