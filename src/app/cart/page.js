@@ -213,9 +213,7 @@ export default function CheckoutCart() {
         <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing}>
           {isProcessing ? "Processing..." : "Pay Securely with Razorpay"}
         </button>
-        <button className="btn-secondary" onClick={handleCash} disabled={isProcessing}>
-          Pay by Cash at Stall
-        </button>
+
       </div>
     </div>
   );
