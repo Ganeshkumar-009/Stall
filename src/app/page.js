@@ -45,32 +45,60 @@ export default function Home() {
       </header>
 
       <h2 className="section-title">Live Menu</h2>
-      <div className="menu-grid">
-        {menu.length === 0 ? <p style={{ color: "var(--text-muted)", gridColumn: "1 / -1", textAlign: "center", padding: "40px" }}>Menu is empty. Wait for Admin to add items!</p> :
-          menu.map((item) => (
-            <div key={item.id} className="menu-card">
-              <img src={item.image_url} alt={item.name} className="menu-image" />
-              <div className="menu-details" style={{ flex: 1 }}>
-                <h3 className="menu-title" style={{ margin: 0 }}>{item.name}</h3>
-                <span className="menu-price" style={{ fontWeight: 800, color: "var(--primary)", fontSize: "1.1rem" }}>₹{item.price}</span>
+      <div className="menu-sections" style={{ display: 'grid', gap: '32px' }}>
+        {menu.length === 0 ? (
+          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "40px" }}>
+            Menu is empty. Wait for Admin to add items!
+          </p>
+        ) : (
+          Object.entries(
+            menu.reduce((acc, item) => {
+              const cat = item.category || 'Other';
+              if (!acc[cat]) acc[cat] = [];
+              acc[cat].push(item);
+              return acc;
+            }, {})
+          ).map(([category, items]) => (
+            <div key={category} className="menu-category-group">
+              <h3 className="category-title" style={{ 
+                fontSize: "1.2rem", 
+                color: "var(--primary)", 
+                marginBottom: "16px", 
+                borderLeft: "4px solid var(--primary)", 
+                paddingLeft: "12px",
+                textTransform: "uppercase",
+                letterSpacing: "1px"
+              }}>
+                {category}
+              </h3>
+              <div className="menu-grid">
+                {items.map((item) => (
+                  <div key={item.id} className="menu-card">
+                    <img src={item.image_url} alt={item.name} className="menu-image" />
+                    <div className="menu-details" style={{ flex: 1 }}>
+                      <h3 className="menu-title" style={{ margin: 0 }}>{item.name}</h3>
+                      <span className="menu-price" style={{ fontWeight: 800, color: "var(--primary)", fontSize: "1.1rem" }}>₹{item.price}</span>
+                    </div>
+                    <button 
+                      className="btn-primary" 
+                      onClick={() => addToCart(item)} 
+                      style={{ 
+                        width: "auto", 
+                        padding: "10px 24px", 
+                        margin: 0, 
+                        borderRadius: "100px", 
+                        fontSize: "1rem",
+                        boxShadow: "none"
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                ))}
               </div>
-              <button 
-                className="btn-primary" 
-                onClick={() => addToCart(item)} 
-                style={{ 
-                  width: "auto", 
-                  padding: "10px 24px", 
-                  margin: 0, 
-                  borderRadius: "100px", 
-                  fontSize: "1rem",
-                  boxShadow: "none"
-                }}
-              >
-                Add
-              </button>
             </div>
           ))
-        }
+        )}
       </div>
 
       {cart.length > 0 && (

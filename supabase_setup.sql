@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
   price integer NOT NULL,
   image_url text,
   is_available boolean DEFAULT true,
+  category text DEFAULT 'Other',
   created_at timestamp with time zone DEFAULT now()
 );
 

@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   // Form states for adding items
   const [newItemName, setNewItemName] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
+  const [newItemCategory, setNewItemCategory] = useState("Biryani");
   const [newItemImage, setNewItemImage] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
@@ -81,6 +82,7 @@ export default function AdminDashboard() {
     const payload = {
       name: newItemName,
       price: parseInt(newItemPrice),
+      category: newItemCategory,
       image_url: newItemImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=250&auto=format&fit=crop",
       is_available: true
     };
@@ -95,7 +97,7 @@ export default function AdminDashboard() {
       setMenu([...data, ...menu]);
     }
 
-    setNewItemName(""); setNewItemPrice(""); setNewItemImage("");
+    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
     setIsAdding(false);
   };
 
@@ -266,32 +268,62 @@ export default function AdminDashboard() {
           <div style={{ background: "var(--surface)", padding: "20px", borderRadius: "16px", boxShadow: "var(--shadow-sm)", marginBottom: "24px" }}>
             <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem" }}>Add New Item</h2>
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input type="text" placeholder="Item Name (e.g. Veg Burger)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
-              <input type="number" placeholder="Price (₹)" value={newItemPrice} onChange={e => setNewItemPrice(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
+              <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <input type="number" placeholder="Price (₹)" value={newItemPrice} onChange={e => setNewItemPrice(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} required />
+                <select 
+                  value={newItemCategory} 
+                  onChange={e => setNewItemCategory(e.target.value)} 
+                  className="input-field" 
+                  style={{ marginBottom: 0, flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #ddd', background: 'white' }}
+                >
+                  <option value="Biryani">Biryani</option>
+                  <option value="Soft Drinks">Soft Drinks</option>
+                  <option value="Sweets">Sweets</option>
+                  <option value="Main Course">Main Course</option>
+                  <option value="Starters">Starters</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
               <input type="url" placeholder="Image URL (optional)" value={newItemImage} onChange={e => setNewItemImage(e.target.value)} className="input-field" style={{ marginBottom: 0 }} />
               <button type="submit" className="btn-primary" disabled={isAdding} style={{ marginTop: '4px' }}>{isAdding ? "Adding..." : "+ Add to Menu Live"}</button>
             </form>
           </div>
 
           <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem" }}>Current Menu</h2>
-          <div style={{ display: 'grid', gap: '12px' }}>
+          <div style={{ display: 'grid', gap: '24px' }}>
             {menu.length === 0 ? <p style={{ color: "var(--text-muted)" }}>Menu is empty.</p> : 
-              menu.map((item) => (
-                <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: "var(--surface)", padding: "16px", borderRadius: "12px", boxShadow: "var(--shadow-sm)", opacity: item.is_available ? 1 : 0.6 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
-                    <div>
-                      <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{item.name}</h3>
-                      <p style={{ margin: 0, fontWeight: '700', color: "var(--text-muted)" }}>₹{item.price}</p>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => toggleAvailability(item.id, item.is_available)} style={{ background: item.is_available ? 'var(--secondary)' : 'var(--success)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                      {item.is_available ? 'Pause' : 'Resume'}
-                    </button>
-                    <button onClick={() => deleteItem(item.id)} style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                      Delete
-                    </button>
+              // Group by category
+              Object.entries(
+                menu.reduce((acc, item) => {
+                  const cat = item.category || 'Other';
+                  if (!acc[cat]) acc[cat] = [];
+                  acc[cat].push(item);
+                  return acc;
+                }, {})
+              ).map(([category, items]) => (
+                <div key={category}>
+                  <h3 style={{ fontSize: "1rem", color: "var(--primary)", textTransform: "uppercase", marginBottom: "12px", borderBottom: "2px solid var(--primary)", display: "inline-block", paddingRight: "10px" }}>{category}</h3>
+                  <div style={{ display: 'grid', gap: '12px' }}>
+                    {items.map((item) => (
+                      <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: "var(--surface)", padding: "16px", borderRadius: "12px", boxShadow: "var(--shadow-sm)", opacity: item.is_available ? 1 : 0.6 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
+                          <div>
+                            <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{item.name}</h3>
+                            <p style={{ margin: 0, fontWeight: '700', color: "var(--text-muted)" }}>₹{item.price}</p>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button onClick={() => toggleAvailability(item.id, item.is_available)} style={{ background: item.is_available ? 'var(--secondary)' : 'var(--success)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                            {item.is_available ? 'Pause' : 'Resume'}
+                          </button>
+                          <button onClick={() => deleteItem(item.id)} style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))
