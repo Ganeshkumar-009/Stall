@@ -148,18 +148,18 @@ export default function AdminDashboard() {
   return (
     <div className="app-container" style={{ maxWidth: "800px", padding: '20px' }}>
       <header className="header" style={{ marginBottom: "20px" }}>
-        <h1>Admin Live 📊</h1>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Chef's Control Center 👨‍🍳</h1>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 12px', fontSize: '0.85rem', borderRadius: '8px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
+          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>🚪 Hang Apron</button>
         </div>
       </header>
 
       {/* ADMIN SECURE TABS */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
-        <button onClick={() => setActiveTab('new')} className={activeTab === 'new' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap' }}>Orders ({newOrders.length})</button>
-        <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'completed' ? '' : 'var(--text-muted)' }}>Delivered ({completedOrders.length})</button>
-        <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'analytics' ? '' : 'var(--text-muted)' }}>Analytics</button>
-        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 20px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : 'var(--text-muted)' }}>Menu</button>
+        <button onClick={() => setActiveTab('new')} className={activeTab === 'new' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', fontSize: '0.9rem' }}>📦 Orders ({newOrders.length})</button>
+        <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'completed' ? '' : '#606C38', fontSize: '0.9rem' }}>✅ Served ({completedOrders.length})</button>
+        <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'analytics' ? '' : '#606C38', fontSize: '0.9rem' }}>📈 Score</button>
+        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : '#606C38', fontSize: '0.9rem' }}>📜 Pantry</button>
       </div>
 
       {/* SEARCH BAR */}
@@ -240,8 +240,8 @@ export default function AdminDashboard() {
 
       {/* ANALYTICS TAB */}
       {activeTab === 'analytics' && (
-        <div style={{ background: "var(--surface)", padding: "24px", borderRadius: "16px", boxShadow: "var(--shadow-sm)" }}>
-          <h2 style={{ marginBottom: "20px", color: "var(--text-main)" }}>Sales Summary 📈</h2>
+        <div style={{ background: "rgba(255,255,255,0.7)", padding: "24px", borderRadius: "24px", boxShadow: "var(--shadow-md)", border: '2px solid var(--accent-gold)' }}>
+          <h2 style={{ marginBottom: "20px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Culinary Success 📈</h2>
           {analyticsList.length === 0 ? <p style={{ color: "var(--text-muted)" }}>No sales data available yet.</p> : (
             <div style={{ display: 'grid', gap: '16px' }}>
               {analyticsList.map((item, i) => (
@@ -265,8 +265,8 @@ export default function AdminDashboard() {
       {/* MENU MANAGEMENT TAB */}
       {activeTab === 'menu' && (
         <div>
-          <div style={{ background: "var(--surface)", padding: "20px", borderRadius: "16px", boxShadow: "var(--shadow-sm)", marginBottom: "24px" }}>
-            <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem" }}>Add New Item</h2>
+          <div style={{ background: "rgba(255,255,255,0.7)", padding: "20px", borderRadius: "24px", boxShadow: "var(--shadow-md)", marginBottom: "24px", border: '2px solid var(--accent-gold)' }}>
+            <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Create New Masterpiece</h2>
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
               <div style={{ display: 'flex', gap: '12px' }}>

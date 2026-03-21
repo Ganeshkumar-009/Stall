@@ -21,7 +21,7 @@
 
 body { 
   background-color: var(--bg-color); 
-  background-image: url('/ratatouille_bg.png');
+  background-image: url('/ratatouille_paris_bg.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -33,28 +33,42 @@ body {
   max-width: 480px; 
   margin: 0 auto; 
   min-height: 100vh; 
-  background: rgba(254, 250, 224, 0.9); /* var(--bg-color) with opacity */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(254, 250, 224, 0.7); /* More transparent to show Paris */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   position: relative; 
   padding-bottom: 90px;
-  box-shadow: 0 0 100px rgba(0, 0, 0, 0.3);
-  border-left: 1px solid rgba(212, 163, 115, 0.3);
-  border-right: 1px solid rgba(212, 163, 115, 0.3);
+  box-shadow: 0 0 120px rgba(0, 0, 0, 0.4);
+  border-left: 2px solid rgba(29, 53, 87, 0.1); /* Parisian Blue hint */
+  border-right: 2px solid rgba(29, 53, 87, 0.1);
 }
 
 /* Header Elements */
 .header { background: var(--surface); padding: 24px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 10; }
 .header h1 { 
   font-family: 'Playfair Display', serif;
-  font-size: 2rem; 
+  font-size: 2.2rem; 
   color: var(--primary); 
   font-weight: 700; 
   font-style: italic;
-  letter-spacing: -0.5px; 
+  letter-spacing: -1px; 
+  text-shadow: 1px 1px 0px rgba(212, 163, 115, 0.2);
 }
 
-.header .badge { background: var(--accent-gold); color: white; padding: 4px 12px; border-radius: var(--radius-full); font-weight: 600; font-size: 0.9rem; }
+.header h1::before {
+  content: "👨‍🍳 ";
+  font-size: 1.5rem;
+}
+
+.header .badge { 
+  background: linear-gradient(135deg, var(--accent-gold) 0%, #B08968 100%); 
+  color: white; 
+  padding: 6px 14px; 
+  border-radius: var(--radius-full); 
+  font-weight: 700; 
+  font-size: 0.8rem; 
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 
 /* Typography */
 .section-title { 
@@ -152,11 +166,20 @@ body {
 .menu-category-group { margin-bottom: 8px; }
 .category-title { 
   font-family: 'Playfair Display', serif;
-  background: rgba(212, 163, 115, 0.15);
-  padding: 10px 20px;
-  border-radius: 12px;
+  background: rgba(29, 53, 87, 0.05); /* Soft Parisian Blue */
+  padding: 10px 24px;
+  border-radius: 12px 0 12px 0;
   display: inline-block;
   font-weight: 700;
-  border: 1px solid rgba(212, 163, 115, 0.3);
+  color: #1D3557;
+  border-bottom: 3px solid var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.category-title::before {
+  content: "🍴 ";
+  font-size: 0.9rem;
+  margin-right: 8px;
 }
 

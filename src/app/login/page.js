@@ -37,21 +37,21 @@ export default function LoginPage() {
     <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
       <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
         
-        <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👔" : "✨"}</div>
-        <h1 style={{ color: "var(--primary)", fontWeight: "800", marginBottom: "8px" }}>Tastes of Godavari</h1>
+        <div style={{ fontSize: "50px", marginBottom: "16px" }}>{step === "admin-login" ? "👨‍🍳" : "✨"}</div>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--primary)", fontWeight: "700", fontStyle: "italic", marginBottom: "8px" }}>Tastes of Godavari</h1>
         <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "0.95rem" }}>
-          {step === "select-role" ? "Welcome back! Who is logging in today?" : "Enter Admin Credentials"}
+          {step === "select-role" ? "Welcome back! Who is cooking in today?" : "Enter Chef Credentials"}
         </p>
 
         {errorMsg && <p style={{ color: "var(--primary)", background: "rgba(230, 57, 70, 0.1)", padding: "10px", borderRadius: "8px", marginBottom: "16px", fontSize: "0.9rem", fontWeight: "600" }}>{errorMsg}</p>}
 
         {step === "select-role" && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button onClick={() => router.push("/")} className="btn-success" style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem" }}>
-              Continue as Customer ➔
+            <button onClick={() => router.push("/")} className="btn-primary" style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem" }}>
+              Continue as Guest ➔
             </button>
-            <button onClick={() => setStep("admin-login")} style={{ background: "transparent", border: "2px solid var(--primary)", color: "var(--primary)", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
-              Login as Admin 👔
+            <button onClick={() => setStep("admin-login")} style={{ background: "rgba(255,255,255,0.7)", border: "2px solid #D4A373", color: "#1D3557", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
+              Login as Chef 👨‍🍳
             </button>
           </div>
         )}

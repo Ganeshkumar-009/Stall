@@ -167,9 +167,10 @@ export default function CheckoutCart() {
 
   if (cart.length === 0) {
     return (
-      <div className="app-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <h2>Your cart is empty 🍽️</h2>
-        <Link href="/"><button className="btn-secondary" style={{ width: "auto", padding: "12px 30px" }}>Back to Menu</button></Link>
+      <div className="app-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: '20px', textAlign: 'center' }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontStyle: 'italic', color: 'var(--primary)', marginBottom: '16px' }}>Your table is empty 🍽️</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Chef Remy is waiting for your orders!</p>
+        <Link href="/"><button className="btn-primary" style={{ width: "auto", padding: "12px 30px" }}>Discover Flavors</button></Link>
       </div>
     );
   }
@@ -177,8 +178,8 @@ export default function CheckoutCart() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1>Your Cart 🛒</h1>
-        <Link href="/" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>Back</Link>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontStyle: 'italic' }}>Culinary Selection 🛒</h1>
+        <Link href="/" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "700", border: '1px solid var(--accent-gold)', padding: '4px 12px', borderRadius: '20px' }}>Back</Link>
       </header>
 
       <div style={{ padding: "20px" }}>
@@ -200,13 +201,13 @@ export default function CheckoutCart() {
               </div>
             </div>
           ))}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", paddingTop: "20px", borderTop: "2px dashed #eee", fontSize: "1.4rem", fontWeight: "800" }}>
-            <span>Total to Pay:</span>
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", paddingTop: "20px", borderTop: "2px dashed var(--accent-gold)", fontSize: "1.4rem", fontWeight: "800" }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Grand Total:</span>
             <span style={{ color: "var(--primary)" }}>₹{getCartTotal()}</span>
           </div>
         </div>
 
-        <h3 style={{ marginBottom: "12px", color: "var(--text-main)" }}>Contact Details</h3>
+        <h3 style={{ marginBottom: "12px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif" }}>Chef's Contact Info</h3>
         <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing} />
         
         <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing}>
