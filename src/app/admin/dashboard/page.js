@@ -14,6 +14,8 @@ export default function AdminDashboard() {
   const [newItemCategory, setNewItemCategory] = useState("Biryani");
   const [newItemImage, setNewItemImage] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
 
   const fetchOrders = async () => {
     const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -37,9 +39,21 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchSettings = async () => {
+    const { data, error } = await supabase.from('settings').select('*').eq('key', 'is_payment_enabled').single();
+    if (data) {
+      setIsPaymentEnabled(data.value);
+    } else if (error && error.code === 'PGRST116') {
+      // Key doesn't exist, create it if we need to? 
+      // For now just assume true if not found in DB
+      setIsPaymentEnabled(true);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
     fetchMenu();
+    fetchSettings();
 
     const syncAcrossTabs = (e) => {
       if (e.key === 'stall_orders') fetchOrders();
@@ -118,6 +132,22 @@ export default function AdminDashboard() {
     if (error) localStorage.setItem('stall_menu', JSON.stringify(newMenu));
   };
 
+  const togglePayment = async () => {
+    setIsSavingSettings(true);
+    const newVal = !isPaymentEnabled;
+    const { error } = await supabase.from('settings').upsert({ key: 'is_payment_enabled', value: newVal });
+    
+    if (!error) {
+      setIsPaymentEnabled(newVal);
+      localStorage.setItem('stall_payment_enabled', newVal);
+      alert(`Payments ${newVal ? 'Enabled' : 'Disabled (Opens Soon)'}`);
+    } else {
+      console.error("Error updating settings:", error);
+      alert("Failed to update setting. Please try again.");
+    }
+    setIsSavingSettings(false);
+  };
+
   const filterOrders = (orderList) => {
     if (!searchTerm) return orderList;
     const term = searchTerm.toLowerCase();
@@ -160,6 +190,7 @@ export default function AdminDashboard() {
         <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'completed' ? '' : '#606C38', fontSize: '0.9rem' }}>✅ Served ({completedOrders.length})</button>
         <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'analytics' ? '' : '#606C38', fontSize: '0.9rem' }}>📈 Score</button>
         <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : '#606C38', fontSize: '0.9rem' }}>📜 Pantry</button>
+        <button onClick={() => setActiveTab('settings')} className={activeTab === 'settings' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'settings' ? '' : '#606C38', fontSize: '0.9rem' }}>⚙️ Setup</button>
       </div>
 
       {/* SEARCH BAR */}
@@ -329,6 +360,46 @@ export default function AdminDashboard() {
               ))
             }
           </div>
+        </div>
+      )}
+
+      {/* SETTINGS TAB */}
+      {activeTab === 'settings' && (
+        <div style={{ background: "rgba(255,255,255,0.7)", padding: "24px", borderRadius: "24px", boxShadow: "var(--shadow-md)", border: '2px solid var(--accent-gold)' }}>
+          <h2 style={{ marginBottom: "20px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Stall Configuration ⚙️</h2>
+          
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'white', borderRadius: '16px', border: '1px solid #eee' }}>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Accept Online Payments</h3>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                {isPaymentEnabled ? 'Currently accepting orders' : 'Showing "Opens Soon" to customers'}
+              </p>
+            </div>
+            <button 
+              onClick={togglePayment} 
+              disabled={isSavingSettings}
+              style={{ 
+                background: isPaymentEnabled ? 'var(--success)' : 'var(--primary)', 
+                color: 'white', 
+                border: 'none', 
+                padding: '10px 20px', 
+                borderRadius: '12px', 
+                fontWeight: 'bold', 
+                cursor: 'pointer',
+                minWidth: '100px'
+              }}
+            >
+              {isSavingSettings ? 'Saving...' : (isPaymentEnabled ? 'ON' : 'OFF')}
+            </button>
+          </div>
+          
+          {!isPaymentEnabled && (
+            <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232, 6, 6, 0.05)', borderRadius: '12px', border: '1px solid rgba(232, 6, 6, 0.1)' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '600' }}>
+                ℹ️ Customers can still add items to their cart but cannot proceed to payment. They will see a "Launching in 5 days! Opens soon" notice.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -10,9 +10,22 @@ export default function CheckoutCart() {
   const { cart, getCartTotal, clearCart, removeFromCart } = useCart();
   const [phone, setPhone] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true);
   const router = useRouter();
 
   const total = getCartTotal();
+
+  useState(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase.from('settings').select('*').eq('key', 'is_payment_enabled').single();
+      if (data) {
+        setIsPaymentEnabled(data.value);
+      }
+      setIsLoadingSettings(false);
+    };
+    fetchSettings();
+  }, []);
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -208,11 +221,31 @@ export default function CheckoutCart() {
         </div>
 
         <h3 style={{ marginBottom: "12px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif" }}>Chef's Contact Info</h3>
-        <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing} />
+        <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing || !isPaymentEnabled} />
         
-        <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing}>
-          {isProcessing ? "Processing..." : "Pay Securely with Razorpay"}
-        </button>
+        {isLoadingSettings ? (
+          <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>Checking kitchen status...</div>
+        ) : isPaymentEnabled ? (
+          <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing}>
+            {isProcessing ? "Processing..." : "Pay Securely with Razorpay"}
+          </button>
+        ) : (
+          <div style={{ 
+            background: 'var(--surface)', 
+            padding: '24px', 
+            borderRadius: '16px', 
+            border: '2px dashed var(--primary)',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ color: 'var(--primary)', marginBottom: '8px' }}>🚀 Launching in 5 Days!</h3>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontWeight: '600' }}>
+              We're getting things ready. This stall opens soon for orders!
+            </p>
+            <Link href="/">
+              <button className="btn-secondary" style={{ marginTop: '16px', width: 'auto' }}>Browse More Dishes</button>
+            </Link>
+          </div>
+        )}
 
       </div>
     </div>

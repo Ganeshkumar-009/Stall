@@ -25,4 +25,13 @@ CREATE TABLE IF NOT EXISTS otp_sessions (
   created_at timestamp with time zone DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS settings (
+  key text PRIMARY KEY,
+  value jsonb
+);
+
+INSERT INTO settings (key, value) 
+VALUES ('is_payment_enabled', 'true'::jsonb)
+ON CONFLICT (key) DO NOTHING;
+
 -- Note: Ensure Row Level Security (RLS) is disabled or properly configured in Supabase settings so your API can insert rows publicly.
