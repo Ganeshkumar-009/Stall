@@ -176,21 +176,21 @@ export default function AdminDashboard() {
   const analyticsList = Object.values(salesSummary).sort((a, b) => b.quantity - a.quantity);
 
   return (
-    <div className="app-container" style={{ maxWidth: "800px", padding: '20px' }}>
+    <div className="app-container" style={{ maxWidth: "800px", padding: '20px', background: 'url("/ratatouille_bg.png") center center / cover no-repeat fixed' }}>
       <header className="header" style={{ marginBottom: "20px" }}>
-        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', borderRadius: '8px' }} />
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '6px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>🚪 Log out</button>
+        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '100px', height: 'auto', borderRadius: '12px' }} />
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href='/login'; }} style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(5px)', cursor: 'pointer', fontWeight: 'bold' }}>🚪 Log out</button>
         </div>
       </header>
 
       {/* ADMIN SECURE TABS */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
-        <button onClick={() => setActiveTab('new')} className={activeTab === 'new' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', fontSize: '0.9rem' }}>📦 Orders ({newOrders.length})</button>
-        <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'completed' ? '' : '#606C38', fontSize: '0.9rem' }}>✅ Served ({completedOrders.length})</button>
-        <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'analytics' ? '' : '#606C38', fontSize: '0.9rem' }}>📈 Score</button>
-        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'menu' ? '' : '#606C38', fontSize: '0.9rem' }}>📜 Pantry</button>
-        <button onClick={() => setActiveTab('settings')} className={activeTab === 'settings' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', background: activeTab === 'settings' ? '' : '#606C38', fontSize: '0.9rem' }}>⚙️ Setup</button>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto', padding: '4px' }}>
+        <button onClick={() => setActiveTab('new')} className={activeTab === 'new' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', borderRadius: '15px' }}>📦 Orders ({newOrders.length})</button>
+        <button onClick={() => setActiveTab('completed')} className={activeTab === 'completed' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', borderRadius: '15px' }}>✅ Served</button>
+        <button onClick={() => setActiveTab('analytics')} className={activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', borderRadius: '15px' }}>📈 Score</button>
+        <button onClick={() => setActiveTab('menu')} className={activeTab === 'menu' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', borderRadius: '15px' }}>📜 Pantry</button>
+        <button onClick={() => setActiveTab('settings')} className={activeTab === 'settings' ? 'btn-primary' : 'btn-secondary'} style={{ margin: 0, padding: '12px 10px', flex: 1, whiteSpace: 'nowrap', borderRadius: '15px' }}>⚙️ Setup</button>
       </div>
 
       {/* SEARCH BAR */}
