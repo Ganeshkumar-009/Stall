@@ -22,6 +22,27 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (item) => {
+    // Play subtle "pop" sound
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        const context = new AudioContext();
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, context.currentTime); // A5 note
+        oscillator.frequency.exponentialRampToValueAtTime(440, context.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.05, context.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.1);
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.1);
+      }
+    } catch (e) {
+      console.warn("Audio feedback failed:", e);
+    }
+
     setCart((prev) => {
       const exists = prev.find((i) => i.id === item.id);
       if (exists) {
