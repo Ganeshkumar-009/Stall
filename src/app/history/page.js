@@ -52,10 +52,10 @@ export default function HistoryPage() {
   if (!isLoggedIn) {
     return (
       <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', padding: '20px' }}>
-        <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
+        <div className="glass-panel" style={{ width: "100%", maxWidth: "400px", padding: "32px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "50px", marginBottom: "16px" }}>📜</div>
-          <h1 style={{ color: "var(--primary)", fontWeight: "800", marginBottom: "8px" }}>Order History</h1>
-          <p style={{ color: "var(--text-muted)", marginBottom: "32px" }}>Enter your mobile number to see your past orders.</p>
+          <h1 style={{ color: "var(--primary)", fontWeight: "800", marginBottom: "8px", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Order History</h1>
+          <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontWeight: '500' }}>Enter your mobile number to see your past orders.</p>
           
           <form onSubmit={handleLogin}>
             <input 
@@ -82,14 +82,14 @@ export default function HistoryPage() {
 
   return (
     <div className="app-container" style={{ padding: '20px' }}>
-      <header className="header" style={{ marginBottom: "20px" }}>
+      <header className="glass-panel" style={{ marginBottom: "20px", padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1>My Orders 📜</h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Phone: {phone}</p>
+          <h1 style={{ margin: 0, fontSize: '1.5rem', fontFamily: "'Playfair Display', serif", color: 'var(--primary)' }}>My Orders 📜</h1>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0, fontWeight: '600' }}>Phone: {phone}</p>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={logout} style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '8px', border: '1px solid #eee', background: 'white', cursor: 'pointer' }}>Logout</button>
-          <Link href="/"><button style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '8px', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Menu</button></Link>
+          <button onClick={logout} style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: '20px', border: '1px solid var(--primary)', color: 'var(--primary)', background: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
+          <Link href="/"><button style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: '20px', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(157, 2, 8, 0.2)' }}>Menu</button></Link>
         </div>
       </header>
 
@@ -102,7 +102,7 @@ export default function HistoryPage() {
             </div>
           ) : (
             orders.map((order) => (
-              <div className="admin-card" key={order.id} style={{ borderLeftColor: order.order_status === 'delivered' ? 'var(--success)' : 'var(--primary)' }}>
+              <div className="glass-card admin-card" key={order.id} style={{ borderLeftColor: order.order_status === 'delivered' ? 'var(--success)' : 'var(--primary)', marginBottom: '4px' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
