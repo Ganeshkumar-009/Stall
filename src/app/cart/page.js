@@ -220,8 +220,10 @@ export default function CheckoutCart() {
           </div>
         </div>
 
-        <h3 style={{ marginBottom: "12px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif" }}>Customer's Contact Number</h3>
-        <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing || !isPaymentEnabled} />
+        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <h3 style={{ margin: 0, color: "var(--primary)", fontFamily: "'Playfair Display', serif", fontSize: '1.2rem' }}>Customer's Contact Number</h3>
+          <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" style={{ marginBottom: 0 }} disabled={isProcessing || !isPaymentEnabled} />
+        </div>
         
         {isLoadingSettings ? (
           <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontWeight: '600' }}>Checking kitchen status...</div>
