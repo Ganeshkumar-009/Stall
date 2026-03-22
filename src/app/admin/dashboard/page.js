@@ -143,7 +143,7 @@ export default function AdminDashboard() {
       alert(`Payments ${newVal ? 'Enabled' : 'Disabled (Opens Soon)'}`);
     } else {
       console.error("Error updating settings:", error);
-      alert("Failed to update setting. Please try again.");
+      alert(`Failed to update setting: ${error.message}. Please make sure you have run the SQL script and disabled RLS on the 'settings' table.`);
     }
     setIsSavingSettings(false);
   };

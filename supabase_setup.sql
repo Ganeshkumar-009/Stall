@@ -34,4 +34,7 @@ INSERT INTO settings (key, value)
 VALUES ('is_payment_enabled', 'true'::jsonb)
 ON CONFLICT (key) DO NOTHING;
 
+-- IMPORTANT: Run this to allow the Admin Dashboard to update settings
+ALTER TABLE settings DISABLE ROW LEVEL SECURITY;
+
 -- Note: Ensure Row Level Security (RLS) is disabled or properly configured in Supabase settings so your API can insert rows publicly.
