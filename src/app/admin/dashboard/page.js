@@ -212,7 +212,7 @@ export default function AdminDashboard() {
         <div className="admin-grid" style={{ display: 'grid', gap: '16px' }}>
           {newOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No matching orders found.</p> : 
             newOrders.map((order) => (
-              <div className="admin-card" key={order.id}>
+              <div className="glass-card admin-card" key={order.id} style={{ borderLeft: '6px solid var(--primary)', marginBottom: '4px' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
@@ -247,7 +247,7 @@ export default function AdminDashboard() {
         <div className="admin-grid" style={{ display: 'grid', gap: '16px' }}>
           {completedOrders.length === 0 ? <p style={{ textAlign: "center", marginTop: "40px", color: "var(--text-muted)" }}>No matching completed orders found.</p> : 
             completedOrders.map((order) => (
-              <div className="admin-card" key={order.id} style={{ borderColor: "var(--success)", opacity: 0.8 }}>
+              <div className="glass-card admin-card" key={order.id} style={{ borderLeft: '6px solid var(--success)', marginBottom: '4px' }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontWeight: "800", fontSize: "1.1rem" }}>{order.order_number ? `#TOG-${order.order_number}` : `#${order.id.slice(0, 8).toUpperCase()}`}</span>
@@ -269,10 +269,9 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* ANALYTICS TAB */}
       {activeTab === 'analytics' && (
-        <div style={{ background: "rgba(255,255,255,0.7)", padding: "24px", borderRadius: "24px", boxShadow: "var(--shadow-md)", border: '2px solid var(--accent-gold)' }}>
-          <h2 style={{ marginBottom: "20px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Culinary Success 📈</h2>
+        <div className="glass-panel" style={{ padding: "30px", border: '2px solid var(--primary)' }}>
+          <h2 style={{ marginBottom: "20px", color: "var(--primary)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '1.8rem' }}>Culinary Success 📈</h2>
           {analyticsList.length === 0 ? <p style={{ color: "var(--text-muted)" }}>No sales data available yet.</p> : (
             <div style={{ display: 'grid', gap: '16px' }}>
               {analyticsList.map((item, i) => (
@@ -293,11 +292,10 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* MENU MANAGEMENT TAB */}
       {activeTab === 'menu' && (
-        <div>
-          <div style={{ background: "rgba(255,255,255,0.7)", padding: "20px", borderRadius: "24px", boxShadow: "var(--shadow-md)", marginBottom: "24px", border: '2px solid var(--accent-gold)' }}>
-            <h2 style={{ marginBottom: "16px", color: "var(--text-main)", fontSize: "1.2rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Create New Masterpiece</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="glass-panel" style={{ padding: "24px", border: '2px solid var(--primary)' }}>
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)", fontSize: "1.5rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Create New Masterpiece</h2>
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -337,8 +335,8 @@ export default function AdminDashboard() {
                   <h3 style={{ fontSize: "1rem", color: "var(--primary)", textTransform: "uppercase", marginBottom: "12px", borderBottom: "2px solid var(--primary)", display: "inline-block", paddingRight: "10px" }}>{category}</h3>
                   <div style={{ display: 'grid', gap: '12px' }}>
                     {items.map((item) => (
-                      <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: "var(--surface)", padding: "16px", borderRadius: "12px", boxShadow: "var(--shadow-sm)", opacity: item.is_available ? 1 : 0.6 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div key={item.id} className="glass-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "16px", opacity: item.is_available ? 1 : 0.6, borderLeft: '4px solid var(--primary)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                           <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
                           <div>
                             <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{item.name}</h3>
@@ -363,14 +361,13 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* SETTINGS TAB */}
       {activeTab === 'settings' && (
-        <div style={{ background: "rgba(255,255,255,0.7)", padding: "24px", borderRadius: "24px", boxShadow: "var(--shadow-md)", border: '2px solid var(--accent-gold)' }}>
-          <h2 style={{ marginBottom: "20px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Stall Configuration ⚙️</h2>
+        <div className="glass-panel" style={{ padding: "30px", border: '2px solid var(--primary)' }}>
+          <h2 style={{ marginBottom: "24px", color: "var(--primary)", fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontSize: '1.8rem' }}>Stall Configuration ⚙️</h2>
           
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'white', borderRadius: '16px', border: '1px solid #eee' }}>
+          <div className="glass-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', border: '1px solid rgba(0,0,0,0.05)' }}>
             <div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Accept Online Payments</h3>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-main)' }}>Accept Online Payments</h3>
               <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
                 {isPaymentEnabled ? 'Currently accepting orders' : 'Showing "Opens Soon" to customers'}
               </p>
