@@ -220,7 +220,7 @@ export default function CheckoutCart() {
           </div>
         </div>
 
-        <h3 style={{ marginBottom: "12px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif" }}>Chef's Contact Info</h3>
+        <h3 style={{ marginBottom: "12px", color: "var(--text-main)", fontFamily: "'Playfair Display', serif" }}>Customer's Contact Number</h3>
         <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing || !isPaymentEnabled} />
         
         {isLoadingSettings ? (
