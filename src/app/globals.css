@@ -29,7 +29,7 @@ body {
   max-width: 480px; 
   margin: 0 auto; 
   min-height: 100vh; 
-  background: url('/ratatouille_paris_bg.png') center center / cover no-repeat fixed;
+  background: url('/biryani_bg.jpg') center center / cover no-repeat fixed;
   position: relative; 
   padding-bottom: 90px;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
@@ -38,18 +38,18 @@ body {
 
 /* Glassmorphism Classes */
 .glass-panel {
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);

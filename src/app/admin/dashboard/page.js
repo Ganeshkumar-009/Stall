@@ -176,7 +176,7 @@ export default function AdminDashboard() {
   const analyticsList = Object.values(salesSummary).sort((a, b) => b.quantity - a.quantity);
 
   return (
-    <div className="app-container" style={{ maxWidth: "800px", padding: '20px', background: 'url("/ratatouille_bg.png") center center / cover no-repeat fixed' }}>
+    <div className="app-container" style={{ maxWidth: "800px", padding: '20px', background: 'url("/biryani_bg.jpg") center center / cover no-repeat fixed' }}>
       <header className="header" style={{ marginBottom: "20px" }}>
         <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '100px', height: 'auto', borderRadius: '12px' }} />
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
