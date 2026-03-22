@@ -3,8 +3,11 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   const { email, password } = await req.json();
 
-  // Check for the exact admin credentials required by user
-  if (email === "shannugannu6@gmail.com" && password === "Godavari@009") {
+  // Multi-account admin support
+  const isAdmin = (email === "shannugannu6@gmail.com" && password === "Godavari@009") || 
+                  (email === "Godavari2026" && password === "vig@avi@gow");
+
+  if (isAdmin) {
     const response = NextResponse.json({ success: true });
     
     // Generate secure admin session

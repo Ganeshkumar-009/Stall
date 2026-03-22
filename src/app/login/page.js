@@ -64,8 +64,8 @@ export default function LoginPage() {
         {step === "admin-login" && (
           <form onSubmit={handleAdminLogin}>
             <input 
-              type="email" 
-              placeholder="Admin Email" 
+              type="text" 
+              placeholder="Admin Username" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="input-field"
