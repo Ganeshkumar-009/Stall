@@ -195,10 +195,10 @@ export default function CheckoutCart() {
         <Link href="/" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "700", border: '1px solid var(--accent-gold)', padding: '4px 12px', borderRadius: '20px' }}>Back</Link>
       </header>
 
-      <div style={{ padding: "20px" }}>
-        <div style={{ background: "var(--surface)", borderRadius: "var(--radius-lg)", padding: "20px", marginBottom: "24px", boxShadow: "var(--shadow-sm)" }}>
+      <div style={{ padding: "20px", display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="glass-panel" style={{ padding: "24px", marginBottom: "0", display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {cart.map((item, idx) => (
-            <div key={idx} className="cart-item" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div key={idx} className="glass-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: '16px', marginBottom: '4px' }}>
               <div style={{ flex: 1 }}>
                 <span className="cart-item-title">{item.name}</span>
                 <div style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginTop: "4px" }}>Qty: {item.quantity}</div>
@@ -224,25 +224,23 @@ export default function CheckoutCart() {
         <input type="tel" placeholder="Enter 10-digit Mobile Number" value={phone} onChange={(e) => setPhone(e.target.value)} className="input-field" disabled={isProcessing || !isPaymentEnabled} />
         
         {isLoadingSettings ? (
-          <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>Checking kitchen status...</div>
+          <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontWeight: '600' }}>Checking kitchen status...</div>
         ) : isPaymentEnabled ? (
-          <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing}>
-            {isProcessing ? "Processing..." : "Pay Securely with Razorpay"}
+          <button className="btn-primary" onClick={handleRazorpayPayment} disabled={isProcessing} style={{ padding: '20px', fontSize: '1.2rem' }}>
+            {isProcessing ? "Finalizing..." : "Pay Securely with Razorpay"}
           </button>
         ) : (
-          <div style={{ 
-            background: 'var(--surface)', 
-            padding: '24px', 
-            borderRadius: '16px', 
+          <div className="glass-panel" style={{ 
+            padding: '32px 24px', 
             border: '2px dashed var(--primary)',
             textAlign: 'center'
           }}>
-            <h3 style={{ color: 'var(--primary)', marginBottom: '8px' }}>🚀 Launching in 5 Days!</h3>
-            <p style={{ color: 'var(--text-muted)', margin: 0, fontWeight: '600' }}>
-              We're getting things ready. This stall opens soon for orders!
+            <h3 style={{ color: 'var(--primary)', marginBottom: '8px', fontSize: '1.5rem', fontFamily: "'Playfair Display', serif" }}>🚀 Launching in 5 Days!</h3>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontWeight: '700' }}>
+              The Chef is perfecting the recipes. Opening soon!
             </p>
             <Link href="/">
-              <button className="btn-secondary" style={{ marginTop: '16px', width: 'auto' }}>Browse More Dishes</button>
+              <button className="btn-primary" style={{ marginTop: '20px', width: 'auto', padding: '12px 30px', background: 'var(--primary)' }}>Browse Menu</button>
             </Link>
           </div>
         )}

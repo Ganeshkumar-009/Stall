@@ -31,29 +31,40 @@ export default function Home() {
     return () => window.removeEventListener('storage', syncTabs);
   }, []);
 
+  const createRipple = (event) => {
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+    circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+    circle.classList.add("ripple");
+
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) ripple.remove();
+    button.appendChild(circle);
+  };
+
   return (
     <div className="app-container">
-      <header className="header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <header className="header" style={{ marginBottom: "20px" }}>
         <div>
-          <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '150px', height: 'auto', marginBottom: '8px', borderRadius: '12px' }} />
-          <p style={{ color: "var(--primary)", fontSize: "1.2rem", fontWeight: "900", letterSpacing: "1px", textTransform: "uppercase" }}>Tastes of Godavari</p>
+          <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', borderRadius: '16px' }} />
+          <p style={{ color: "var(--primary)", fontSize: "1rem", fontWeight: "900", textTransform: "uppercase", marginTop: "4px" }}>Tastes of Godavari</p>
         </div>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <Link href="/history" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: "0.8rem", color: "var(--primary)", fontWeight: "700", textDecoration: "none", border: "1px solid var(--primary)", padding: "6px 14px", borderRadius: "100px", background: 'white' }}>
-            📜 History
-          </Link>
-          <Link href="/login" style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: "700", textDecoration: "none", border: "1px solid #ddd", padding: "6px 14px", borderRadius: "100px", background: 'white' }}>
-            🏰 Admin
-          </Link>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <Link href="/history" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)', padding: '8px 16px', borderRadius: '20px', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem' }}>📜 History</Link>
+          <Link href="/login" style={{ background: 'var(--primary)', color: 'white', padding: '8px 16px', borderRadius: '20px', textDecoration: 'none', fontWeight: 'bold', fontSize: '0.8rem', boxShadow: '0 4px 12px rgba(157, 2, 8, 0.2)' }}>🏰 Staff</Link>
         </div>
       </header>
 
-      <h2 className="section-title">✨ Specials Today</h2>
-      <div className="menu-sections" style={{ display: 'grid', gap: '32px' }}>
+      <div className="menu-sections" style={{ display: 'grid', gap: '24px', paddingBottom: '120px' }}>
         {menu.length === 0 ? (
-          <p style={{ color: "var(--text-muted)", textAlign: "center", padding: "40px" }}>
-            The kitchen is currently quiet. Check back soon! 🐭
-          </p>
+          <div className="glass-panel" style={{ margin: '40px 20px', padding: '40px', textAlign: 'center' }}>
+            <p style={{ color: "var(--text-muted)", fontWeight: '600' }}>The kitchen is currently quiet. Check back soon! 🐭</p>
+          </div>
         ) : (
           Object.entries(
             menu.reduce((acc, item) => {
@@ -64,27 +75,28 @@ export default function Home() {
             }, {})
           ).map(([category, items]) => (
             <div key={category} className="menu-category-group">
-              <h3 className="category-title" style={{ marginBottom: "20px" }}>
-                {category}
-              </h3>
+              <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>
               <div className="menu-grid">
                 {items.map((item) => (
-                  <div key={item.id} className="menu-card">
-                    <img src={item.image_url} alt={item.name} className="menu-image" />
-                    <div className="menu-details" style={{ flex: 1 }}>
-                      <h3 className="menu-title" style={{ margin: 0, color: '#283618' }}>{item.name}</h3>
-                      <span className="menu-price" style={{ fontWeight: 800, color: "var(--primary)", fontSize: "1.1rem" }}>₹{item.price}</span>
+                  <div key={item.id} className="glass-card menu-card" style={{ overflow: 'hidden' }}>
+                    <img src={item.image_url} alt={item.name} />
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--primary)', fontFamily: "'Playfair Display', serif" }}>{item.name}</h3>
+                      <span style={{ fontWeight: 800, color: "var(--text-muted)", fontSize: "1.1rem" }}>₹{item.price}</span>
                     </div>
                     <button 
                       className="btn-primary" 
-                      onClick={() => addToCart(item)} 
+                      onClick={(e) => { createRipple(e); addToCart(item); }} 
                       style={{ 
-                        width: "auto", 
-                        padding: "10px 24px", 
+                        width: "50px", 
+                        height: "50px", 
+                        padding: 0, 
                         margin: 0, 
-                        borderRadius: "100px", 
-                        fontSize: "1rem",
-                        boxShadow: "none"
+                        borderRadius: "15px", 
+                        fontSize: "1.4rem",
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                     >
                       +

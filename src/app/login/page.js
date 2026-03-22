@@ -8,8 +8,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
+
+  const handleCustomerContinue = () => {
+    setIsLoggingIn(true);
+    setTimeout(() => {
+      router.push("/");
+    }, 1500); // Match animation duration
+  };
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -22,8 +29,10 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
-        router.refresh(); 
-        router.push("/admin/dashboard");
+        setIsLoggingIn(true);
+        setTimeout(() => {
+          router.push("/admin/dashboard");
+        }, 1500);
       } else {
         const data = await res.json();
         setErrorMsg(data.error || "Invalid Credentials.");
@@ -35,25 +44,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="app-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
-      <div style={{ background: "var(--surface)", width: "100%", maxWidth: "400px", borderRadius: "24px", padding: "32px 24px", boxShadow: "var(--shadow-md)", textAlign: "center" }}>
+    <div className={`app-container ${isLoggingIn ? 'logging-in' : ''}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+      <div className="glass-panel login-card" style={{ width: "100%", maxWidth: "400px", padding: "40px 24px", textAlign: "center", transition: 'all 0.8s ease' }}>
         
-        <div style={{ marginBottom: "24px" }}></div>
-        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '180px', height: 'auto', margin: '0 auto 8px', display: 'block', borderRadius: '16px' }} />
-        <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--primary)", fontWeight: "900", fontStyle: "italic", marginBottom: "16px", fontSize: "1.8rem", textTransform: "uppercase", letterSpacing: "1px" }}>Tastes of Godavari</h1>
-        <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "0.95rem" }}>
-          {step === "select-role" ? "Welcome back! Please select your role:" : "Enter Admin Credentials"}
+        <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', margin: '0 auto 16px', display: 'block', borderRadius: '20px', boxShadow: '0 8px 16px rgba(0,0,0,0.1)' }} />
+        <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--primary)", fontWeight: "900", fontStyle: "italic", marginBottom: "8px", fontSize: "2rem" }}>Tastes of Godavari</h1>
+        <p style={{ color: "var(--text-muted)", marginBottom: "32px", fontSize: "1rem", fontWeight: "500" }}>
+          {step === "select-role" ? "The Chef awaits your order..." : "Admin Access Required"}
         </p>
 
-        {errorMsg && <p style={{ color: "var(--primary)", background: "rgba(230, 57, 70, 0.1)", padding: "10px", borderRadius: "8px", marginBottom: "16px", fontSize: "0.9rem", fontWeight: "600" }}>{errorMsg}</p>}
+        {errorMsg && <p style={{ color: "var(--primary)", background: "rgba(157, 2, 8, 0.05)", padding: "12px", borderRadius: "12px", marginBottom: "16px", fontSize: "0.9rem", fontWeight: "600", border: '1px solid rgba(157, 2, 8, 0.1)' }}>{errorMsg}</p>}
 
         {step === "select-role" && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button onClick={() => router.push("/")} className="btn-primary" style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem" }}>
-              Continue as Customer ➔
+            <button onClick={handleCustomerContinue} className="btn-primary" style={{ padding: '18px' }}>
+              Order Now ➔
             </button>
-            <button onClick={() => setStep("admin-login")} style={{ background: "white", border: "1px solid #ddd", color: "#333", fontWeight: "bold", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer" }}>
-              Login as Admin
+            <button onClick={() => setStep("admin-login")} style={{ background: "rgba(255,255,255,0.5)", border: "1px solid rgba(0,0,0,0.1)", color: "#333", fontWeight: "800", width: "100%", padding: "16px", borderRadius: "16px", fontSize: "1.1rem", cursor: "pointer", backdropFilter: 'blur(5px)' }}>
+              Staff Login
             </button>
           </div>
         )}
