@@ -13,10 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleCustomerContinue = () => {
-    setIsLoggingIn(true);
-    setTimeout(() => {
-      router.push("/");
-    }, 1500); // Match animation duration
+    router.push("/");
   };
 
   const handleAdminLogin = async (e) => {
@@ -30,10 +27,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
-        setIsLoggingIn(true);
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 1500);
+        router.push("/admin/dashboard");
       } else {
         const data = await res.json();
         setErrorMsg(data.error || "Invalid Credentials.");
