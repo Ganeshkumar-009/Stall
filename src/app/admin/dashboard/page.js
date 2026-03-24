@@ -203,13 +203,16 @@ export default function AdminDashboard() {
 
     const { error: err1 } = await supabase.from('menu_items').update({ sort_order: newOrder1 }).eq('id', item1.id);
     const { error: err2 } = await supabase.from('menu_items').update({ sort_order: newOrder2 }).eq('id', item2.id);
-    
-    if (!err1 && !err2) {
+
+    if (err1 || err2) {
+      console.error("Error moving item:", err1 || err2);
+      alert("Failed to update item order in database. Please make sure you have run the SQL script.");
+    } else {
       setMenu(menu.map(item => {
         if (item.id === item1.id) return { ...item, sort_order: newOrder1 };
         if (item.id === item2.id) return { ...item, sort_order: newOrder2 };
         return item;
-      }).sort((a,b) => a.sort_order - b.sort_order));
+      }).sort((a,b) => (a.sort_order || 0) - (b.sort_order || 0)));
     }
   };
 
