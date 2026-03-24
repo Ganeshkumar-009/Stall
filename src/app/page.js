@@ -90,6 +90,22 @@ export default function Home() {
         </div>
       </header>
 
+      <div style={{ textAlign: 'center', marginBottom: '15px' }}>
+        <span style={{ 
+          background: 'rgba(232, 6, 6, 0.1)', 
+          color: 'var(--primary)', 
+          padding: '6px 16px', 
+          borderRadius: '20px', 
+          fontSize: '0.8rem', 
+          fontWeight: '700',
+          border: '1px solid rgba(232, 6, 6, 0.2)',
+          backdropFilter: 'blur(5px)',
+          display: 'inline-block'
+        }}>
+          📢 Prices will be updated soon!
+        </span>
+      </div>
+
       {/* Category Tabs */}
       <nav className="category-nav">
         {categories.map(cat => (
