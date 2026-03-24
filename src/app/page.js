@@ -58,35 +58,56 @@ export default function Home() {
     return cart.reduce((sum, i) => sum + i.quantity, 0);
   };
 
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const categories = ["All", ...Array.from(new Set(menu.map(item => item.category || 'Other')))];
+
+  const filteredMenu = selectedCategory === "All" 
+    ? menu 
+    : menu.filter(item => (item.category || 'Other') === selectedCategory);
+
   return (
     <div className="app-container">
-      <header className="header" style={{ marginBottom: "20px" }}>
+      <header className="header" style={{ marginBottom: "10px" }}>
         <div>
           <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '120px', height: 'auto', borderRadius: '16px' }} />
           <p style={{ color: "var(--primary)", fontSize: "1rem", fontWeight: "900", textTransform: "uppercase", marginTop: "4px" }}>Tastes of Godavari</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <Link href="/history" style={{ background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)', padding: '8px 16px', borderRadius: '20px', textDecoration: 'none', color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.8rem' }}>📜 History</Link>
-          <Link href="/login" style={{ background: 'var(--primary)', color: 'white', padding: '8px 16px', borderRadius: '20px', textDecoration: 'none', fontWeight: 'bold', fontSize: '0.8rem', boxShadow: '0 4px 12px rgba(157, 2, 8, 0.2)' }}>🏰 Staff</Link>
+          <Link href="/login" style={{ background: 'var(--primary)', color: 'white', padding: '8px 16px', borderRadius: '20px', textDecoration: 'none', fontWeight: 'bold', fontSize: '0.8rem', boxShadow: '0 4px 12px rgba(157, 2, 8, 0.2)' }}> castles Staff</Link>
         </div>
       </header>
 
-      <div className="menu-sections" style={{ display: 'grid', gap: '24px', paddingBottom: '120px' }}>
-        {menu.length === 0 ? (
+      {/* Category Tabs */}
+      <nav className="category-nav">
+        {categories.map(cat => (
+          <button 
+            key={cat} 
+            className={`category-tab ${selectedCategory === cat ? 'active' : ''}`}
+            onClick={() => setSelectedCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </nav>
+
+      <div className="menu-sections" style={{ display: 'grid', gap: '24px', paddingBottom: '120px', marginTop: '10px' }}>
+        {filteredMenu.length === 0 ? (
           <div className="glass-panel" style={{ margin: '40px 20px', padding: '40px', textAlign: 'center' }}>
-            <p style={{ color: "var(--text-muted)", fontWeight: '600' }}>The kitchen is currently quiet. Check back soon! 🐭</p>
+            <p style={{ color: "var(--text-muted)", fontWeight: '600' }}>No items found in this section. 🐭</p>
           </div>
         ) : (
           Object.entries(
-            menu.reduce((acc, item) => {
+            filteredMenu.reduce((acc, item) => {
               const cat = item.category || 'Other';
               if (!acc[cat]) acc[cat] = [];
               acc[cat].push(item);
               return acc;
             }, {})
-          ).map(([category, items]) => (
+          ).sort(([a], [b]) => a === selectedCategory ? -1 : b === selectedCategory ? 1 : 0).map(([category, items]) => (
             <div key={category} className="menu-category-group">
-              <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>
+              {selectedCategory === "All" && <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>}
               <div className="menu-grid">
                 {items.map((item) => (
                   <div key={item.id} className="glass-card menu-card" style={{ overflow: 'hidden' }}>
