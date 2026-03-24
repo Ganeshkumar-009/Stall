@@ -11,13 +11,20 @@ export default function Home() {
   const router = useRouter();
 
   const fetchMenu = async () => {
-    const { data } = await supabase.from('menu_items').select('*').eq('is_available', true).order('sort_order', { ascending: true });
+    let { data, error } = await supabase.from('menu_items').select('*').eq('is_available', true).order('sort_order', { ascending: true });
+    
+    if (error) {
+      console.warn("Retrying fetch without sort_order:", error.message);
+      const { data: fallbackData } = await supabase.from('menu_items').select('*').eq('is_available', true).order('created_at', { ascending: false });
+      data = fallbackData;
+    }
+
     if (data && data.length > 0) {
       setMenu(data);
     } else {
       const localMenu = localStorage.getItem('stall_menu');
       if (localMenu) setMenu(JSON.parse(localMenu).filter(i => i.is_available !== false));
-      else setMenu([]); // Completely empty if nothing added by Admin!
+      else setMenu([]); 
     }
   };
 

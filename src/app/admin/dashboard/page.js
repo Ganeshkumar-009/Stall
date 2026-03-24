@@ -19,6 +19,7 @@ export default function AdminDashboard() {
   const [isUploading, setIsUploading] = useState(false);
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [dbError, setDbError] = useState(null);
 
   const fetchOrders = async () => {
     const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -32,10 +33,20 @@ export default function AdminDashboard() {
   };
 
   const fetchMenu = async () => {
-    const { data } = await supabase.from('menu_items').select('*').order('sort_order', { ascending: true });
+    let { data, error } = await supabase.from('menu_items').select('*').order('sort_order', { ascending: true });
+    
+    if (error) {
+      console.warn("Retrying fetch without sort_order:", error.message);
+      if (error.message.includes('sort_order')) setDbError("Please run the SQL script to enable item reordering.");
+      const { data: fallbackData } = await supabase.from('menu_items').select('*').order('created_at', { ascending: false });
+      data = fallbackData;
+    } else {
+      setDbError(null);
+    }
+
     if (data && data.length > 0) {
       setMenu(data);
-      // Seed category order if empty
+      // Seed category order if empty...
       if (categoryOrder.length === 0) {
         const uniqueCats = Array.from(new Set(data.map(i => i.category || 'Other')));
         const defaultPriority = ["Biryani", "Godavari Special(Must Try)", "Combos", "Mojitos"];
@@ -421,6 +432,11 @@ export default function AdminDashboard() {
 
       {activeTab === 'menu' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {dbError && (
+            <div style={{ background: 'rgba(232, 6, 6, 0.1)', border: '1px solid var(--primary)', padding: '12px', borderRadius: '12px', color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.85rem' }}>
+              ⚠️ {dbError} (Check [add_item_sort_order.sql](file:///c:/Users/gkgan/OneDrive/Desktop/stall/add_item_sort_order.sql))
+            </div>
+          )}
           <div className="glass-panel" style={{ padding: "24px", border: '2px solid var(--primary)', position: 'relative' }}>
             {editingItem && (
               <button onClick={cancelEdit} style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.1)', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', fontWeight: '900' }}>×</button>
@@ -503,7 +519,7 @@ export default function AdminDashboard() {
               // Group by category and sort according to categoryOrder
               [...categoryOrder, ...Array.from(new Set(menu.map(i => i.category || 'Other'))).filter(c => !categoryOrder.includes(c))]
                 .map(category => {
-                  const items = menu.filter(item => (item.category || 'Other') === category).sort((a, b) => a.sort_order - b.sort_order);
+                  const items = menu.filter(item => (item.category || 'Other') === category).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
                   if (items.length === 0) return null;
                   return (
                     <div key={category}>
