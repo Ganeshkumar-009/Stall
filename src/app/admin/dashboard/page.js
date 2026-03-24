@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [newItemImage, setNewItemImage] = useState("");
   const [editingItem, setEditingItem] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
@@ -141,6 +142,33 @@ export default function AdminDashboard() {
   const cancelEdit = () => {
     setEditingItem(null);
     setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setIsUploading(true);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('menu-images')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      alert("Error uploading image: " + uploadError.message + "\nMake sure you created a public bucket named 'menu-images' in Supabase!");
+      setIsUploading(false);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('menu-images')
+      .getPublicUrl(filePath);
+
+    setNewItemImage(publicUrl);
+    setIsUploading(false);
   };
 
   const deleteItem = async (id) => {
@@ -349,7 +377,38 @@ export default function AdminDashboard() {
                   <option value="Other">Other</option>
                 </select>
               </div>
-              <input type="url" placeholder="Image URL (optional)" value={newItemImage} onChange={e => setNewItemImage(e.target.value)} className="input-field" style={{ marginBottom: 0 }} />
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input type="url" placeholder="Image URL (optional)" value={newItemImage} onChange={e => setNewItemImage(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} />
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type="file" 
+                    id="file-upload" 
+                    accept="image/*" 
+                    onChange={handleFileUpload} 
+                    style={{ display: 'none' }} 
+                  />
+                  <label 
+                    htmlFor="file-upload" 
+                    className="btn-secondary" 
+                    style={{ 
+                      padding: '12px 16px', 
+                      borderRadius: '12px', 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      fontSize: '0.85rem',
+                      whiteSpace: 'nowrap',
+                      border: '1px solid var(--primary)',
+                      color: 'var(--primary)',
+                      background: 'rgba(255,255,255,0.6)',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {isUploading ? "Uploading..." : "📷 Upload"}
+                  </label>
+                </div>
+              </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button type="submit" className="btn-primary" disabled={isAdding} style={{ flex: 2, marginTop: '4px' }}>
                   {isAdding ? (editingItem ? "Updating..." : "Adding...") : (editingItem ? "💾 Save Changes" : "+ Add to Menu Live")}
