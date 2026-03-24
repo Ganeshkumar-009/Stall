@@ -35,6 +35,13 @@ export default function AdminDashboard() {
     const { data } = await supabase.from('menu_items').select('*').order('created_at', { ascending: false });
     if (data && data.length > 0) {
       setMenu(data);
+      // Seed category order if empty
+      if (categoryOrder.length === 0) {
+        const uniqueCats = Array.from(new Set(data.map(i => i.category || 'Other')));
+        const defaultPriority = ["Biryani", "Godavari Special(Must Try)", "Combos"];
+        const sorted = [...defaultPriority, ...uniqueCats.filter(c => !defaultPriority.includes(c))].filter(c => uniqueCats.includes(c));
+        if (sorted.length > 0) saveCategoryOrder(sorted);
+      }
     } else {
       const localMenu = localStorage.getItem('stall_menu');
       if (localMenu) setMenu(JSON.parse(localMenu));
@@ -124,6 +131,10 @@ export default function AdminDashboard() {
       } else if (data) {
         setMenu([...data, ...menu]);
       }
+    }
+
+    if (!categoryOrder.includes(newItemCategory)) {
+      saveCategoryOrder([...categoryOrder, newItemCategory]);
     }
 
     setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
@@ -531,9 +542,7 @@ export default function AdminDashboard() {
                 ℹ️ Customers can still add items to their cart but cannot proceed to payment. They will see a "Launching in 5 days! Opens soon" notice.
               </p>
             </div>
-          )}
-            </div>
-          )}
+            )}
 
           {/* Category Ordering Management */}
           <div className="glass-card" style={{ marginTop: '24px', padding: '24px', border: '1px solid rgba(0,0,0,0.05)' }}>
