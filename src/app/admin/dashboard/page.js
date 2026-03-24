@@ -43,14 +43,13 @@ export default function AdminDashboard() {
   };
 
   const fetchSettings = async () => {
-    const { data, error } = await supabase.from('settings').select('*').eq('key', 'is_payment_enabled').single();
-    if (data) {
-      setIsPaymentEnabled(data.value);
-    } else if (error && error.code === 'PGRST116') {
-      // Key doesn't exist, create it if we need to? 
-      // For now just assume true if not found in DB
-      setIsPaymentEnabled(true);
-    }
+    // Fetch payment status
+    const { data: payData } = await supabase.from('settings').select('*').eq('key', 'is_payment_enabled').single();
+    if (payData) setIsPaymentEnabled(payData.value);
+
+    // Fetch category order
+    const { data: catData } = await supabase.from('settings').select('*').eq('key', 'category_order').single();
+    if (catData) setCategoryOrder(catData.value);
   };
 
   useEffect(() => {
@@ -533,6 +532,27 @@ export default function AdminDashboard() {
               </p>
             </div>
           )}
+            </div>
+          )}
+
+          {/* Category Ordering Management */}
+          <div className="glass-card" style={{ marginTop: '24px', padding: '24px', border: '1px solid rgba(0,0,0,0.05)' }}>
+            <h3 style={{ color: 'var(--primary)', marginBottom: '16px', fontSize: '1.2rem', fontFamily: "'Playfair Display', serif", borderBottom: '2px solid rgba(157,2,8,0.1)', paddingBottom: '8px' }}>Categorization Priority</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px' }}>Arrange categories to control how they appear for customers. "All" is always first.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {categoryOrder.length === 0 ? <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No categories found yet. Add items to see categories here.</p> : 
+                categoryOrder.map((cat, idx) => (
+                  <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '12px 16px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                    <span style={{ fontWeight: '600', color: 'var(--text-main)', fontSize: '0.95rem' }}>{cat}</span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => moveCategory(idx, -1)} disabled={idx === 0} style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: idx === 0 ? '#f9f9f9' : 'white', cursor: idx === 0 ? 'default' : 'pointer', fontSize: '0.9rem' }}>▲</button>
+                      <button onClick={() => moveCategory(idx, 1)} disabled={idx === categoryOrder.length - 1} style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: idx === categoryOrder.length - 1 ? '#f9f9f9' : 'white', cursor: idx === categoryOrder.length - 1 ? 'default' : 'pointer', fontSize: '0.9rem' }}>▼</button>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
         </div>
       )}
     </div>
