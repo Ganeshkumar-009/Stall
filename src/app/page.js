@@ -92,17 +92,18 @@ export default function Home() {
 
       <div style={{ textAlign: 'center', marginBottom: '15px' }}>
         <span style={{ 
-          background: 'rgba(232, 6, 6, 0.1)', 
-          color: 'var(--primary)', 
-          padding: '6px 16px', 
-          borderRadius: '20px', 
-          fontSize: '0.8rem', 
-          fontWeight: '700',
-          border: '1px solid rgba(232, 6, 6, 0.2)',
-          backdropFilter: 'blur(5px)',
-          display: 'inline-block'
+          background: 'rgba(255, 183, 3, 0.95)', 
+          color: '#000', 
+          padding: '8px 20px', 
+          borderRadius: '25px', 
+          fontSize: '0.9rem', 
+          fontWeight: '900',
+          border: '2px solid rgba(255, 255, 255, 0.5)',
+          boxShadow: '0 8px 32px rgba(255, 183, 3, 0.3)',
+          display: 'inline-block',
+          animation: 'pulse 2s infinite'
         }}>
-          📢 Prices will be updated soon!
+          ⚠️ Prices will be updated soon!
         </span>
       </div>
 
