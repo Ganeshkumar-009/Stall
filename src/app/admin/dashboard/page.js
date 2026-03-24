@@ -96,7 +96,7 @@ export default function AdminDashboard() {
     
     const payload = {
       name: newItemName,
-      price: parseInt(newItemPrice),
+      price: newItemPrice, // Store as string to allow symbols
       category: newItemCategory,
       image_url: newItemImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=250&auto=format&fit=crop",
       is_available: editingItem ? editingItem.is_available : true
@@ -330,7 +330,7 @@ export default function AdminDashboard() {
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
               <div style={{ display: 'flex', gap: '12px' }}>
-                <input type="number" placeholder="Price (₹)" value={newItemPrice} onChange={e => setNewItemPrice(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} required />
+                <input type="text" placeholder="Price (₹)" value={newItemPrice} onChange={e => setNewItemPrice(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} required />
                 <select 
                   value={newItemCategory} 
                   onChange={e => setNewItemCategory(e.target.value)} 

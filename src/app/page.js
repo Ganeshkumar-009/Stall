@@ -47,6 +47,17 @@ export default function Home() {
     button.appendChild(circle);
   };
 
+  const calculateTotal = () => {
+    return cart.reduce((sum, i) => {
+      const priceVal = parseFloat(i.price.toString().replace(/[^0-9.]/g, '')) || 0;
+      return sum + (priceVal * i.quantity);
+    }, 0);
+  };
+
+  const calculateItemCount = () => {
+    return cart.reduce((sum, i) => sum + i.quantity, 0);
+  };
+
   return (
     <div className="app-container">
       <header className="header" style={{ marginBottom: "20px" }}>
@@ -112,7 +123,7 @@ export default function Home() {
       {cart.length > 0 && (
         <div className="cart-float" style={{ background: 'linear-gradient(135deg, #1D3557 0%, #283618 100%)', boxShadow: '0 8px 30px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', width: 'calc(100% - 40px)', maxWidth: '440px', borderRadius: '50px', zIndex: '1000' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'white', fontWeight: 'bold', fontSize: '1.1rem' }}>
-            🛒 {cart.reduce((sum, i) => sum + i.quantity, 0)} items | ₹{cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)}
+            🛒 {calculateItemCount()} items | ₹{calculateTotal()}
           </span>
           <Link href="/cart">
             <button className="btn-success" style={{ padding: "10px 24px", background: 'white', color: '#1D3557', border: 'none', borderRadius: '100px', fontWeight: '800', cursor: 'pointer', fontSize: '1rem' }}>To Cart ➔</button>

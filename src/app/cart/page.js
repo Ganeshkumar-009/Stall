@@ -216,7 +216,7 @@ export default function CheckoutCart() {
           ))}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", paddingTop: "20px", borderTop: "2px dashed var(--accent-gold)", fontSize: "1.4rem", fontWeight: "800" }}>
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Grand Total:</span>
-            <span style={{ color: "var(--primary)" }}>₹{getCartTotal()}</span>
+            <span style={{ color: "var(--primary)" }}>₹{cart.reduce((sum, i) => sum + (parseFloat(i.price.toString().replace(/[^0-9.]/g, '')) || 0) * i.quantity, 0)}</span>
           </div>
         </div>
 
