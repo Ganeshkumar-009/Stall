@@ -171,6 +171,20 @@ export default function AdminDashboard() {
     setIsUploading(false);
   };
 
+  const handlePaste = async (e) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          // Wrap in a fake event object to reuse handleFileUpload
+          handleFileUpload({ target: { files: [file] } });
+          break;
+        }
+      }
+    }
+  };
+
   const deleteItem = async (id) => {
     if(!confirm("Are you sure you want to permanently delete this menu item?")) return;
     const { error } = await supabase.from('menu_items').delete().eq('id', id);
@@ -355,7 +369,11 @@ export default function AdminDashboard() {
               <button onClick={cancelEdit} style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.1)', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', fontWeight: '900' }}>×</button>
             )}
             <h2 style={{ marginBottom: "20px", color: "var(--primary)", fontSize: "1.5rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>{editingItem ? "Update Masterpiece" : "Create New Masterpiece"}</h2>
-            <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <form 
+              onSubmit={handleAddItem} 
+              onPaste={handlePaste}
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+            >
               <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
               <div style={{ display: 'flex', gap: '12px' }}>
                 <input type="text" placeholder="Price (₹)" value={newItemPrice} onChange={e => setNewItemPrice(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} required />
