@@ -32,13 +32,13 @@ export default function AdminDashboard() {
   };
 
   const fetchMenu = async () => {
-    const { data } = await supabase.from('menu_items').select('*').order('created_at', { ascending: false });
+    const { data } = await supabase.from('menu_items').select('*').order('sort_order', { ascending: true });
     if (data && data.length > 0) {
       setMenu(data);
       // Seed category order if empty
       if (categoryOrder.length === 0) {
         const uniqueCats = Array.from(new Set(data.map(i => i.category || 'Other')));
-        const defaultPriority = ["Biryani", "Godavari Special(Must Try)", "Combos"];
+        const defaultPriority = ["Biryani", "Godavari Special(Must Try)", "Combos", "Mojitos"];
         const sorted = [...defaultPriority, ...uniqueCats.filter(c => !defaultPriority.includes(c))].filter(c => uniqueCats.includes(c));
         if (sorted.length > 0) saveCategoryOrder(sorted);
       }
@@ -106,8 +106,8 @@ export default function AdminDashboard() {
       name: newItemName,
       price: newItemPrice, // Store as string to allow symbols
       category: newItemCategory,
-      image_url: newItemImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=250&auto=format&fit=crop",
-      is_available: editingItem ? editingItem.is_available : true
+      is_available: editingItem ? editingItem.is_available : true,
+      sort_order: editingItem ? editingItem.sort_order : (menu.length > 0 ? Math.max(...menu.map(i => i.sort_order || 0)) + 1 : 1)
     };
 
     if (editingItem) {
@@ -166,6 +166,39 @@ export default function AdminDashboard() {
     if (targetIndex < 0 || targetIndex >= newOrder.length) return;
     [newOrder[index], newOrder[targetIndex]] = [newOrder[targetIndex], newOrder[index]];
     await saveCategoryOrder(newOrder);
+  };
+    
+  const moveItem = async (itemId, category, direction) => {
+    const categoryItems = menu.filter(item => (item.category || 'Other') === category);
+    const index = categoryItems.findIndex(i => i.id === itemId);
+    const targetIndex = index + direction;
+    
+    if (targetIndex < 0 || targetIndex >= categoryItems.length) return;
+    
+    const item1 = categoryItems[index];
+    const item2 = categoryItems[targetIndex];
+    
+    const oldOrder1 = item1.sort_order;
+    const oldOrder2 = item2.sort_order;
+    
+    // If they have same sort_order, use their indices to fix
+    let newOrder1 = oldOrder2;
+    let newOrder2 = oldOrder1;
+    if (newOrder1 === newOrder2) {
+      newOrder1 = targetIndex;
+      newOrder2 = index;
+    }
+
+    const { error: err1 } = await supabase.from('menu_items').update({ sort_order: newOrder1 }).eq('id', item1.id);
+    const { error: err2 } = await supabase.from('menu_items').update({ sort_order: newOrder2 }).eq('id', item2.id);
+    
+    if (!err1 && !err2) {
+      setMenu(menu.map(item => {
+        if (item.id === item1.id) return { ...item, sort_order: newOrder1 };
+        if (item.id === item2.id) return { ...item, sort_order: newOrder2 };
+        return item;
+      }).sort((a,b) => a.sort_order - b.sort_order));
+    }
   };
 
   const handleFileUpload = async (e) => {
@@ -413,6 +446,7 @@ export default function AdminDashboard() {
                   <option value="Snacks">Snacks</option>
                   <option value="Milk Shakes">Milk Shakes</option>
                   <option value="Soft Drinks">Soft Drinks</option>
+                  <option value="Mojitos">Mojitos</option>
                   <option value="Sweets">Sweets</option>
                   <option value="Combos">Combos</option>
                   <option value="Godavari Special(Must Try)">Godavari Special(Must Try)</option>
@@ -466,42 +500,45 @@ export default function AdminDashboard() {
           <div style={{ display: 'grid', gap: '24px' }}>
             {menu.length === 0 ? <p style={{ color: "var(--text-muted)" }}>Menu is empty.</p> : 
               // Group by category
-              Object.entries(
-                menu.reduce((acc, item) => {
-                  const cat = item.category || 'Other';
-                  if (!acc[cat]) acc[cat] = [];
-                  acc[cat].push(item);
-                  return acc;
-                }, {})
-              ).map(([category, items]) => (
-                <div key={category}>
-                  <h3 style={{ fontSize: "1rem", color: "var(--primary)", textTransform: "uppercase", marginBottom: "12px", borderBottom: "2px solid var(--primary)", display: "inline-block", paddingRight: "10px" }}>{category}</h3>
-                  <div style={{ display: 'grid', gap: '12px' }}>
-                    {items.map((item) => (
-                      <div key={item.id} className="glass-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "16px", opacity: item.is_available ? 1 : 0.6, borderLeft: '4px solid var(--primary)' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                          <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
-                          <div>
-                            <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{item.name}</h3>
-                            <p style={{ margin: 0, fontWeight: '700', color: "var(--text-muted)" }}>₹{item.price}</p>
+              // Group by category and sort according to categoryOrder
+              [...categoryOrder, ...Array.from(new Set(menu.map(i => i.category || 'Other'))).filter(c => !categoryOrder.includes(c))]
+                .map(category => {
+                  const items = menu.filter(item => (item.category || 'Other') === category).sort((a, b) => a.sort_order - b.sort_order);
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={category}>
+                      <h3 style={{ fontSize: "1rem", color: "var(--primary)", textTransform: "uppercase", marginBottom: "12px", borderBottom: "2px solid var(--primary)", display: "inline-block", paddingRight: "10px" }}>{category}</h3>
+                      <div style={{ display: 'grid', gap: '12px' }}>
+                        {items.map((item, idx) => (
+                          <div key={item.id} className="glass-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "16px", opacity: item.is_available ? 1 : 0.6, borderLeft: '4px solid var(--primary)' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                              <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />
+                              <div>
+                                <h3 style={{ fontSize: '1.1rem', margin: 0 }}>{item.name}</h3>
+                                <p style={{ margin: 0, fontWeight: '700', color: "var(--text-muted)" }}>₹{item.price}</p>
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginRight: '8px' }}>
+                                <button onClick={() => moveItem(item.id, category, -1)} disabled={idx === 0} style={{ padding: '2px 8px', fontSize: '0.7rem', border: '1px solid #ddd', borderRadius: '4px', background: idx === 0 ? '#f5f5f5' : 'white', cursor: idx === 0 ? 'default' : 'pointer' }}>▲</button>
+                                <button onClick={() => moveItem(item.id, category, 1)} disabled={idx === items.length - 1} style={{ padding: '2px 8px', fontSize: '0.7rem', border: '1px solid #ddd', borderRadius: '4px', background: idx === items.length - 1 ? '#f5f5f5' : 'white', cursor: idx === items.length - 1 ? 'default' : 'pointer' }}>▼</button>
+                              </div>
+                              <button onClick={() => startEdit(item)} style={{ background: 'var(--accent-gold)', color: '#582f0e', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                                Edit
+                              </button>
+                              <button onClick={() => toggleAvailability(item.id, item.is_available)} style={{ background: item.is_available ? 'var(--secondary)' : 'var(--success)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                                {item.is_available ? 'Pause' : 'Resume'}
+                              </button>
+                              <button onClick={() => deleteItem(item.id)} style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                                Delete
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                          <button onClick={() => startEdit(item)} style={{ background: 'var(--accent-gold)', color: '#582f0e', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                            Edit
-                          </button>
-                          <button onClick={() => toggleAvailability(item.id, item.is_available)} style={{ background: item.is_available ? 'var(--secondary)' : 'var(--success)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                            {item.is_available ? 'Pause' : 'Resume'}
-                          </button>
-                          <button onClick={() => deleteItem(item.id)} style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                            Delete
-                          </button>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))
+                    </div>
+                  );
+                })
             }
           </div>
         </div>

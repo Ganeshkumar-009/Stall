@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const fetchMenu = async () => {
-    const { data } = await supabase.from('menu_items').select('*').eq('is_available', true);
+    const { data } = await supabase.from('menu_items').select('*').eq('is_available', true).order('sort_order', { ascending: true });
     if (data && data.length > 0) {
       setMenu(data);
     } else {
@@ -126,16 +126,15 @@ export default function Home() {
             <p style={{ color: "var(--text-muted)", fontWeight: '600' }}>No items found in this section. 🐭</p>
           </div>
         ) : (
-          Object.entries(
-            filteredMenu.reduce((acc, item) => {
-              const cat = item.category || 'Other';
-              if (!acc[cat]) acc[cat] = [];
-              acc[cat].push(item);
-              return acc;
-            }, {})
-          ).sort(([a], [b]) => a === selectedCategory ? -1 : b === selectedCategory ? 1 : 0).map(([category, items]) => (
-            <div key={category} className="menu-category-group">
-              {selectedCategory === "All" && <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>}
+          // Group by category and sort according to categoryOrder
+          [...categoryOrder, ...Array.from(new Set(menu.map(i => i.category || 'Other'))).filter(c => !categoryOrder.includes(c))]
+            .filter(cat => selectedCategory === "All" || cat === selectedCategory)
+            .map(category => {
+              const items = filteredMenu.filter(item => (item.category || 'Other') === category).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+              if (items.length === 0) return null;
+              return (
+                <div key={category} className="menu-category-group">
+                  {selectedCategory === "All" && <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>}
               <div className="menu-grid">
                 {items.map((item) => (
                   <div key={item.id} className="glass-card menu-card" style={{ overflow: 'hidden' }}>
@@ -165,7 +164,8 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          ))
+                );
+            })
         )}
       </div>
 
