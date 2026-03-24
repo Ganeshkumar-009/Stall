@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [newItemCategory, setNewItemCategory] = useState("Biryani");
   const [newItemImage, setNewItemImage] = useState("");
   const [editingItem, setEditingItem] = useState(null);
+  const [categoryOrder, setCategoryOrder] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
@@ -142,6 +143,19 @@ export default function AdminDashboard() {
   const cancelEdit = () => {
     setEditingItem(null);
     setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
+  };
+
+  const saveCategoryOrder = async (newOrder) => {
+    setCategoryOrder(newOrder);
+    await supabase.from('settings').upsert({ key: 'category_order', value: newOrder });
+  };
+
+  const moveCategory = async (index, direction) => {
+    const newOrder = [...categoryOrder];
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= newOrder.length) return;
+    [newOrder[index], newOrder[targetIndex]] = [newOrder[targetIndex], newOrder[index]];
+    await saveCategoryOrder(newOrder);
   };
 
   const handleFileUpload = async (e) => {

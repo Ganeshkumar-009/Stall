@@ -59,8 +59,19 @@ export default function Home() {
   };
 
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categoryOrder, setCategoryOrder] = useState([]);
 
-  const categories = ["All", ...Array.from(new Set(menu.map(item => item.category || 'Other')))];
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'category_order').single();
+      if (data) setCategoryOrder(data.value);
+    };
+    fetchSettings();
+  }, []);
+
+  const sortedUniqueCategories = Array.from(new Set(menu.map(item => item.category || 'Other')));
+  
+  const categories = ["All", ...[...categoryOrder, ...sortedUniqueCategories.filter(c => !categoryOrder.includes(c))].filter(c => sortedUniqueCategories.includes(c))];
 
   const filteredMenu = selectedCategory === "All" 
     ? menu 
