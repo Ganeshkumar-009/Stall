@@ -13,6 +13,7 @@ export default function AdminDashboard() {
   const [newItemPrice, setNewItemPrice] = useState("");
   const [newItemCategory, setNewItemCategory] = useState("Biryani");
   const [newItemImage, setNewItemImage] = useState("");
+  const [editingItem, setEditingItem] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
@@ -98,21 +99,48 @@ export default function AdminDashboard() {
       price: parseInt(newItemPrice),
       category: newItemCategory,
       image_url: newItemImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=250&auto=format&fit=crop",
-      is_available: true
+      is_available: editingItem ? editingItem.is_available : true
     };
 
-    const { data, error } = await supabase.from('menu_items').insert([payload]).select();
-    
-    if (error) {
-      const newMenu = [{ id: `ITEM-${Date.now()}`, ...payload }, ...menu];
-      setMenu(newMenu);
-      localStorage.setItem('stall_menu', JSON.stringify(newMenu));
-    } else if (data) {
-      setMenu([...data, ...menu]);
+    if (editingItem) {
+      const { data, error } = await supabase.from('menu_items').update(payload).eq('id', editingItem.id).select();
+      
+      if (error) {
+        const newMenu = menu.map(item => item.id === editingItem.id ? { ...item, ...payload } : item);
+        setMenu(newMenu);
+        localStorage.setItem('stall_menu', JSON.stringify(newMenu));
+      } else if (data) {
+        setMenu(menu.map(item => item.id === editingItem.id ? data[0] : item));
+      }
+      setEditingItem(null);
+    } else {
+      const { data, error } = await supabase.from('menu_items').insert([payload]).select();
+      
+      if (error) {
+        const newMenu = [{ id: `ITEM-${Date.now()}`, ...payload }, ...menu];
+        setMenu(newMenu);
+        localStorage.setItem('stall_menu', JSON.stringify(newMenu));
+      } else if (data) {
+        setMenu([...data, ...menu]);
+      }
     }
 
     setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
     setIsAdding(false);
+  };
+
+  const startEdit = (item) => {
+    setEditingItem(item);
+    setNewItemName(item.name);
+    setNewItemPrice(item.price);
+    setNewItemCategory(item.category || "Biryani");
+    setNewItemImage(item.image_url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingItem(null);
+    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
   };
 
   const deleteItem = async (id) => {
@@ -294,8 +322,11 @@ export default function AdminDashboard() {
 
       {activeTab === 'menu' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div className="glass-panel" style={{ padding: "24px", border: '2px solid var(--primary)' }}>
-            <h2 style={{ marginBottom: "20px", color: "var(--primary)", fontSize: "1.5rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>Create New Masterpiece</h2>
+          <div className="glass-panel" style={{ padding: "24px", border: '2px solid var(--primary)', position: 'relative' }}>
+            {editingItem && (
+              <button onClick={cancelEdit} style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.1)', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', fontWeight: '900' }}>×</button>
+            )}
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)", fontSize: "1.5rem", fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>{editingItem ? "Update Masterpiece" : "Create New Masterpiece"}</h2>
             <form onSubmit={handleAddItem} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input type="text" placeholder="Item Name (e.g. Chicken Biryani)" value={newItemName} onChange={e => setNewItemName(e.target.value)} className="input-field" style={{ marginBottom: 0 }} required />
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -315,7 +346,14 @@ export default function AdminDashboard() {
                 </select>
               </div>
               <input type="url" placeholder="Image URL (optional)" value={newItemImage} onChange={e => setNewItemImage(e.target.value)} className="input-field" style={{ marginBottom: 0 }} />
-              <button type="submit" className="btn-primary" disabled={isAdding} style={{ marginTop: '4px' }}>{isAdding ? "Adding..." : "+ Add to Menu Live"}</button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button type="submit" className="btn-primary" disabled={isAdding} style={{ flex: 2, marginTop: '4px' }}>
+                  {isAdding ? (editingItem ? "Updating..." : "Adding...") : (editingItem ? "💾 Save Changes" : "+ Add to Menu Live")}
+                </button>
+                {editingItem && (
+                  <button type="button" onClick={cancelEdit} className="btn-secondary" style={{ flex: 1, marginTop: '4px', borderRadius: '12px' }}>Cancel</button>
+                )}
+              </div>
             </form>
           </div>
 
@@ -344,6 +382,9 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div style={{ display: 'flex', gap: '8px' }}>
+                          <button onClick={() => startEdit(item)} style={{ background: 'var(--accent-gold)', color: '#582f0e', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                            Edit
+                          </button>
                           <button onClick={() => toggleAvailability(item.id, item.is_available)} style={{ background: item.is_available ? 'var(--secondary)' : 'var(--success)', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                             {item.is_available ? 'Pause' : 'Resume'}
                           </button>
