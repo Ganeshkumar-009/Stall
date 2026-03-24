@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ export default function CheckoutCart() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
   const [isLoadingSettings, setIsLoadingSettings] = useState(true);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const router = useRouter();
 
   const total = getCartTotal();
@@ -25,6 +26,29 @@ export default function CheckoutCart() {
       setIsLoadingSettings(false);
     };
     fetchSettings();
+  }, []);
+
+  useEffect(() => {
+    const targetDate = new Date('2026-03-27T10:00:00').getTime();
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const loadRazorpay = () => {
@@ -237,9 +261,22 @@ export default function CheckoutCart() {
             border: '2px dashed var(--primary)',
             textAlign: 'center'
           }}>
-            <h3 style={{ color: 'var(--primary)', marginBottom: '8px', fontSize: '1.5rem', fontFamily: "'Playfair Display', serif" }}>🚀 Launching in 5 Days!</h3>
-            <p style={{ color: 'var(--text-muted)', margin: 0, fontWeight: '700' }}>
-              The Chef is perfecting the recipes. Opening soon!
+            <h3 style={{ color: 'var(--primary)', marginBottom: '8px', fontSize: '1.5rem', fontFamily: "'Playfair Display', serif" }}>🚀 Grand Opening In</h3>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '16px' }}>
+              {[
+                { label: 'D', value: timeLeft.days },
+                { label: 'H', value: timeLeft.hours },
+                { label: 'M', value: timeLeft.minutes },
+                { label: 'S', value: timeLeft.seconds }
+              ].map((t, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ background: 'var(--primary)', color: 'white', padding: '10px 8px', borderRadius: '12px', minWidth: '45px', fontSize: '1.2rem', fontWeight: '800' }}>{t.value}</div>
+                  <span style={{ fontSize: '0.7rem', fontWeight: '700', marginTop: '4px', textTransform: 'uppercase' }}>{t.label}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontWeight: '700', fontSize: '0.9rem' }}>
+              The Chef is perfecting the recipes. See you on March 27 @ 10 AM!
             </p>
             <Link href="/">
               <button className="btn-primary" style={{ marginTop: '20px', width: 'auto', padding: '12px 30px', background: 'var(--primary)' }}>Browse Menu</button>
