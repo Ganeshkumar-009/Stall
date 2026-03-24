@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const [isPaymentEnabled, setIsPaymentEnabled] = useState(true);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [dbError, setDbError] = useState(null);
+  const [reorderCategory, setReorderCategory] = useState("Biryani");
 
   const fetchOrders = async () => {
     const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -613,6 +614,41 @@ export default function AdminDashboard() {
                   </div>
                 ))
               }
+            </div>
+          </div>
+          
+          {/* Item Ordering Management */}
+          <div className="glass-card" style={{ marginTop: '24px', padding: '24px', border: '1px solid rgba(0,0,0,0.05)' }}>
+            <h3 style={{ color: 'var(--primary)', marginBottom: '16px', fontSize: '1.2rem', fontFamily: "'Playfair Display', serif", borderBottom: '2px solid rgba(157,2,8,0.1)', paddingBottom: '8px' }}>Item Priority</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px' }}>Select a category to arrange its items.</p>
+            
+            <select 
+              value={reorderCategory} 
+              onChange={e => setReorderCategory(e.target.value)} 
+              className="input-field" 
+              style={{ marginBottom: '16px', borderRadius: '12px', border: '1px solid #ddd', background: 'white' }}
+            >
+              {[...categoryOrder, ...Array.from(new Set(menu.map(i => i.category || 'Other'))).filter(c => !categoryOrder.includes(c))].map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {menu.filter(item => (item.category || 'Other') === reorderCategory).sort((a,b) => (a.sort_order || 0) - (b.sort_order || 0)).map((item, idx, arr) => (
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '12px 16px', borderRadius: '12px', border: '1px solid #eee' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <img src={item.image_url} alt={item.name} style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }} />
+                    <span style={{ fontWeight: '600', color: 'var(--text-main)', fontSize: '0.9rem' }}>{item.name}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button onClick={() => moveItem(item.id, reorderCategory, -1)} disabled={idx === 0} style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: idx === 0 ? '#f9f9f9' : 'white', cursor: idx === 0 ? 'default' : 'pointer', fontSize: '0.85rem' }}>▲</button>
+                    <button onClick={() => moveItem(item.id, reorderCategory, 1)} disabled={idx === arr.length - 1} style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', background: idx === arr.length - 1 ? '#f9f9f9' : 'white', cursor: idx === arr.length - 1 ? 'default' : 'pointer', fontSize: '0.85rem' }}>▼</button>
+                  </div>
+                </div>
+              ))}
+              {menu.filter(item => (item.category || 'Other') === reorderCategory).length === 0 && (
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>No items found in this category.</p>
+              )}
             </div>
           </div>
         </div>
