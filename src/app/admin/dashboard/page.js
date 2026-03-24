@@ -338,10 +338,14 @@ export default function AdminDashboard() {
                   style={{ marginBottom: 0, flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #ddd', background: 'white' }}
                 >
                   <option value="Biryani">Biryani</option>
+                  <option value="Starters">Starters</option>
+                  <option value="Main Course">Main Course</option>
+                  <option value="Snacks">Snacks</option>
+                  <option value="Milk Shakes">Milk Shakes</option>
                   <option value="Soft Drinks">Soft Drinks</option>
                   <option value="Sweets">Sweets</option>
-                  <option value="Main Course">Main Course</option>
-                  <option value="Starters">Starters</option>
+                  <option value="Combos">Combos</option>
+                  <option value="Godavari Special(Must Try)">Godavari Special(Must Try)</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
