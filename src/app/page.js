@@ -97,22 +97,6 @@ export default function Home() {
         </div>
       </header>
 
-      <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-        <span style={{ 
-          background: 'rgba(255, 183, 3, 0.95)', 
-          color: '#000', 
-          padding: '8px 20px', 
-          borderRadius: '25px', 
-          fontSize: '0.9rem', 
-          fontWeight: '900',
-          border: '2px solid rgba(255, 255, 255, 0.5)',
-          boxShadow: '0 8px 32px rgba(255, 183, 3, 0.3)',
-          display: 'inline-block',
-          animation: 'pulse 2s infinite'
-        }}>
-          ⚠️ Prices will be updated soon!
-        </span>
-      </div>
 
       {/* Category Tabs */}
       <nav className="category-nav">
