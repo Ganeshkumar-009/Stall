@@ -93,15 +93,27 @@ body {
 
 /* Menu Card */
 .menu-card { 
-  height: 120px;
-  padding: 12px; 
+  min-height: 140px;
+  height: auto;
+  padding: 16px; 
   display: flex; 
   align-items: center; 
   gap: 16px; 
   cursor: pointer;
 }
 
-.menu-card img { width: 90px; height: 90px; border-radius: 16px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.menu-card img { 
+  width: 90px; 
+  height: 90px; 
+  border-radius: 16px; 
+  object-fit: cover; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+  flex-shrink: 0;
+}
+
+.menu-sections {
+  scroll-margin-top: 180px;
+}
 
 /* Buttons */
 .btn-primary { 

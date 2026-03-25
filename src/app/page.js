@@ -144,11 +144,11 @@ export default function Home() {
                   {selectedCategory === "All" && <h3 className="category-title" style={{ marginBottom: "16px" }}>{category}</h3>}
               <div className="menu-grid">
                 {items.map((item) => (
-                  <div key={item.id} className="glass-card menu-card" style={{ overflow: 'hidden' }}>
+                  <div key={item.id} className="glass-card menu-card">
                     <img src={item.image_url} alt={item.name} />
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--primary)', fontFamily: "'Playfair Display', serif" }}>{item.name}</h3>
-                      <span style={{ fontWeight: 800, color: "var(--text-muted)", fontSize: "1.1rem" }}>₹{item.price}</span>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <h3 style={{ fontSize: '1.1rem', margin: 0, color: 'var(--primary)', fontFamily: "'Playfair Display', serif", lineHeight: '1.2', fontWeight: '800' }}>{item.name}</h3>
+                      <span style={{ fontWeight: 800, color: "var(--text-muted)", fontSize: "1.2rem" }}>₹{item.price}</span>
                     </div>
                     <button 
                       className="btn-primary" 
