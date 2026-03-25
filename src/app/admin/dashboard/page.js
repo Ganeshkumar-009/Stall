@@ -118,6 +118,7 @@ export default function AdminDashboard() {
       name: newItemName,
       price: newItemPrice, // Store as string to allow symbols
       category: newItemCategory,
+      image_url: newItemImage,
       is_available: editingItem ? editingItem.is_available : true,
       sort_order: editingItem ? editingItem.sort_order : (menu.length > 0 ? Math.max(...menu.map(i => i.sort_order || 0)) + 1 : 1)
     };
@@ -466,6 +467,8 @@ export default function AdminDashboard() {
                   <option value="Snacks">Snacks</option>
                   <option value="Milk Shakes">Milk Shakes</option>
                   <option value="Soft Drinks">Soft Drinks</option>
+                  <option value="Soft Drinks (Pet Bottle)">Soft Drinks (Pet Bottle)</option>
+                  <option value="Soft Drinks (Glass Bottle)">Soft Drinks (Glass Bottle)</option>
                   <option value="Mojitos">Mojitos</option>
                   <option value="Sweets">Sweets</option>
                   <option value="Combos">Combos</option>
