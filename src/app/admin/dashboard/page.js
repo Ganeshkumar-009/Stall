@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [dbError, setDbError] = useState(null);
   const [reorderCategory, setReorderCategory] = useState("Biryani");
+  const [customCategory, setCustomCategory] = useState("");
 
   const fetchOrders = async () => {
     const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -117,7 +118,7 @@ export default function AdminDashboard() {
     const payload = {
       name: newItemName,
       price: newItemPrice, // Store as string to allow symbols
-      category: newItemCategory,
+      category: newItemCategory === "Other" ? customCategory : newItemCategory,
       image_url: newItemImage,
       is_available: editingItem ? editingItem.is_available : true,
       sort_order: editingItem ? editingItem.sort_order : (menu.length > 0 ? Math.max(...menu.map(i => i.sort_order || 0)) + 1 : 1)
@@ -146,26 +147,30 @@ export default function AdminDashboard() {
       }
     }
 
-    if (!categoryOrder.includes(newItemCategory)) {
-      saveCategoryOrder([...categoryOrder, newItemCategory]);
+    if (!categoryOrder.includes(payload.category)) {
+      saveCategoryOrder([...categoryOrder, payload.category]);
     }
 
-    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
+    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani"); setCustomCategory("");
     setIsAdding(false);
   };
 
   const startEdit = (item) => {
+    const predefinedCategories = ["Biryani", "Starters", "Main Course", "Snacks", "Milk Shakes", "Milkshakes with scoops", "Soft Drinks", "Soft Drinks (Pet Bottle)", "Soft Drinks (Glass Bottle)", "Mojitos", "Sweets", "Combos", "Godavari Special(Must Try)"];
+    const isPredefined = predefinedCategories.includes(item.category);
+    
     setEditingItem(item);
     setNewItemName(item.name);
     setNewItemPrice(item.price);
-    setNewItemCategory(item.category || "Biryani");
+    setNewItemCategory(isPredefined ? item.category : "Other");
+    setCustomCategory(isPredefined ? "" : item.category);
     setNewItemImage(item.image_url);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const cancelEdit = () => {
     setEditingItem(null);
-    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani");
+    setNewItemName(""); setNewItemPrice(""); setNewItemImage(""); setNewItemCategory("Biryani"); setCustomCategory("");
   };
 
   const saveCategoryOrder = async (newOrder) => {
@@ -476,6 +481,17 @@ export default function AdminDashboard() {
                   <option value="Godavari Special(Must Try)">Godavari Special(Must Try)</option>
                   <option value="Other">Other</option>
                 </select>
+                {newItemCategory === "Other" && (
+                  <input 
+                    type="text" 
+                    placeholder="New Category Name" 
+                    value={customCategory} 
+                    onChange={e => setCustomCategory(e.target.value)} 
+                    className="input-field" 
+                    style={{ marginBottom: 0, flex: 1 }} 
+                    required 
+                  />
+                )}
               </div>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input type="url" placeholder="Image URL (optional)" value={newItemImage} onChange={e => setNewItemImage(e.target.value)} className="input-field" style={{ marginBottom: 0, flex: 1 }} />
