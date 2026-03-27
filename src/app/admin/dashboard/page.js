@@ -319,7 +319,7 @@ export default function AdminDashboard() {
   const analyticsList = Object.values(salesSummary).sort((a, b) => b.quantity - a.quantity);
 
   return (
-    <div className="app-container" style={{ maxWidth: "800px", padding: '20px', background: 'url("/biryani_bg.jpg") center center / cover no-repeat fixed' }}>
+    <div className="app-container admin-container" style={{ maxWidth: "800px", padding: '20px' }}>
       <header className="header" style={{ marginBottom: "20px" }}>
         <img src="/logo.jpg" alt="Tastes of Godavari Logo" style={{ width: '100px', height: 'auto', borderRadius: '12px' }} />
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -466,6 +466,7 @@ export default function AdminDashboard() {
                   <option value="Main Course">Main Course</option>
                   <option value="Snacks">Snacks</option>
                   <option value="Milk Shakes">Milk Shakes</option>
+                  <option value="Milkshakes with scoops">Milkshakes with scoops</option>
                   <option value="Soft Drinks">Soft Drinks</option>
                   <option value="Soft Drinks (Pet Bottle)">Soft Drinks (Pet Bottle)</option>
                   <option value="Soft Drinks (Glass Bottle)">Soft Drinks (Glass Bottle)</option>
