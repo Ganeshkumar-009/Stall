@@ -100,15 +100,7 @@ export default function AdminDashboard() {
     if (error) localStorage.setItem('stall_orders', JSON.stringify(updated));
   };
 
-  const deleteOrder = async (orderId) => {
-    if (!confirm("Are you sure you want to delete this order?")) return;
-    const { error } = await supabase.from('orders').delete().eq('id', orderId);
-    
-    const updated = orders.filter(o => o.id !== orderId);
-    setOrders(updated);
-    localStorage.setItem('stall_orders', JSON.stringify(updated));
-    if (error) console.error("Error deleting order from Supabase:", error.message);
-  };
+
   
   const handleAddItem = async (e) => {
     e.preventDefault();
@@ -368,7 +360,7 @@ export default function AdminDashboard() {
                       {new Date(order.created_at).toLocaleString('en-IN', { timeStyle: 'short', dateStyle: 'short' })}
                     </span>
                   </div>
-                  <button onClick={() => deleteOrder(order.id)} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold' }}>Delete</button>
+
                 </div>
                 <p style={{ marginBottom: "12px", fontWeight: "600", color: "var(--text-main)" }}>📞 {order.customer_phone}</p>
                 <div style={{ marginBottom: "16px", color: "var(--text-muted)" }}>
@@ -403,7 +395,7 @@ export default function AdminDashboard() {
                       {new Date(order.created_at).toLocaleString('en-IN', { timeStyle: 'short', dateStyle: 'short' })}
                     </span>
                   </div>
-                  <button onClick={() => deleteOrder(order.id)} style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 'bold' }}>Delete</button>
+
                 </div>
                 <div style={{ marginBottom: "8px", color: "var(--text-muted)" }}>
                   {order.items.map((item, i) => (
